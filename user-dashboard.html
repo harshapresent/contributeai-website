@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard — ContributeAI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --orange:#FF451A;--orange-h:#e03610;
+      --navy:#152550;--navy-d:#0D1630;
+      --teal:#18CAA8;--amber:#F7AD00;
+      --google:#4285F4;--ms:#0078D4;
+      --white:#fff;--off:#F9F8F5;
+      --gray-lt:#f1f0ed;--gray:#6b7280;--gray-dk:#374151;
+      --sidebar:230px;
+      --shadow:0 2px 12px rgba(21,37,80,.07);
+      --shadow-lg:0 8px 40px rgba(21,37,80,.14);
+      --trans:.22s ease;
+    }
+    html{scroll-behavior:smooth}
+    body{font-family:'Roboto',sans-serif;background:var(--off);color:var(--navy-d);min-height:100vh;display:flex}
+    a{text-decoration:none;color:inherit}
+
+    /* ══ SIDEBAR ══ */
+    .sidebar{
+      width:var(--sidebar);background:var(--navy-d);
+      position:fixed;top:0;bottom:0;left:0;z-index:200;
+      display:flex;flex-direction:column;overflow-y:auto;
+      transition:transform var(--trans);
+    }
+    .sb-logo{display:flex;align-items:center;gap:.75rem;padding:1.5rem 1.25rem;border-bottom:1px solid rgba(255,255,255,.07);text-decoration:none}
+    .sb-logo-icon{width:36px;height:36px;background:var(--orange);border-radius:.5rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .sb-logo-name{font-size:1.1rem;font-weight:900;color:#fff}
+    .sb-logo-name em{color:var(--orange);font-style:normal}
+
+    .sb-section{padding:1.25rem 1rem .375rem}
+    .sb-section-label{font-size:.6875rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.28);padding:0 .5rem;margin-bottom:.5rem}
+    .sb-item{display:flex;align-items:center;gap:.75rem;padding:.75rem .875rem;border-radius:.75rem;font-size:.9rem;font-weight:500;color:rgba(255,255,255,.55);cursor:pointer;transition:all var(--trans);margin-bottom:.125rem;border:none;background:none;width:100%;text-align:left}
+    .sb-item:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.9)}
+    .sb-item.active{background:rgba(255,69,26,.18);color:#fff;border-left:2px solid var(--orange);padding-left:calc(.875rem - 2px)}
+    .sb-icon{font-size:1rem;width:20px;text-align:center;flex-shrink:0}
+    .sb-badge{margin-left:auto;background:var(--orange);color:#fff;font-size:.6875rem;font-weight:700;padding:.1rem .45rem;border-radius:100px;min-width:18px;text-align:center}
+
+    .sb-footer{margin-top:auto;padding:1.25rem;border-top:1px solid rgba(255,255,255,.07)}
+    .sb-user{display:flex;align-items:center;gap:.75rem;padding:.75rem;border-radius:.75rem;cursor:pointer;transition:background var(--trans)}
+    .sb-user:hover{background:rgba(255,255,255,.07)}
+    .avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--teal),#0e9b7e);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.875rem;color:#fff;flex-shrink:0}
+    .avatar-lg{width:68px;height:68px;font-size:1.5rem;border-radius:50%;background:linear-gradient(135deg,var(--teal),#0e9b7e);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff}
+    .sb-user-name{font-size:.875rem;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .sb-user-role{font-size:.75rem;color:rgba(255,255,255,.38)}
+
+    /* ══ TOPBAR ══ */
+    .main{margin-left:var(--sidebar);flex:1;min-height:100vh;display:flex;flex-direction:column}
+    .topbar{background:var(--white);height:66px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;box-shadow:0 1px 0 rgba(21,37,80,.07);position:sticky;top:0;z-index:100}
+    .topbar-left{display:flex;align-items:center;gap:1rem}
+    .topbar-title{font-size:1.1875rem;font-weight:700;color:var(--navy)}
+    .topbar-right{display:flex;align-items:center;gap:.875rem}
+    .icon-btn{width:38px;height:38px;border-radius:.625rem;background:var(--off);border:1.5px solid var(--gray-lt);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;color:var(--gray);transition:all var(--trans);position:relative}
+    .icon-btn:hover{border-color:var(--navy);color:var(--navy)}
+    .notif-dot{position:absolute;top:-3px;right:-3px;width:9px;height:9px;background:var(--orange);border-radius:50%;border:2px solid var(--white)}
+    .btn-top{display:flex;align-items:center;gap:.5rem;padding:.625rem 1.125rem;background:var(--orange);color:#fff;border:none;border-radius:.75rem;font-size:.875rem;font-weight:700;cursor:pointer;transition:all var(--trans);text-decoration:none}
+    .btn-top:hover{background:var(--orange-h);transform:translateY(-1px);box-shadow:0 4px 14px rgba(255,69,26,.28)}
+    .btn-top--ghost{background:transparent;color:var(--navy);border:1.5px solid var(--gray-lt)}
+    .btn-top--ghost:hover{background:var(--off);border-color:var(--navy);box-shadow:none;transform:translateY(-1px)}
+    .hamburger{display:none;background:none;border:none;font-size:1.375rem;cursor:pointer;color:var(--navy);padding:.25rem}
+
+    /* ══ CONTENT ══ */
+    .content{padding:1.75rem 2rem 4rem;flex:1}
+
+    /* WELCOME BANNER */
+    .welcome{background:linear-gradient(135deg,var(--navy-d) 0%,#1a2f5e 100%);border-radius:1.5rem;padding:2rem 2.25rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;margin-bottom:1.75rem;position:relative;overflow:hidden;flex-wrap:wrap}
+    .welcome::before{content:'';position:absolute;top:-30%;right:-5%;width:350px;height:350px;background:radial-gradient(circle,rgba(255,69,26,.2) 0%,transparent 65%);pointer-events:none}
+    .welcome::after{content:'';position:absolute;bottom:-40%;left:-5%;width:250px;height:250px;background:radial-gradient(circle,rgba(24,202,168,.12) 0%,transparent 65%);pointer-events:none}
+    .welcome-text{position:relative;z-index:1}
+    .welcome-text h2{font-size:1.5rem;font-weight:700;color:#fff;margin-bottom:.375rem}
+    .welcome-text p{font-size:.9375rem;color:rgba(255,255,255,.6)}
+    .welcome-actions{display:flex;gap:.75rem;flex-wrap:wrap;position:relative;z-index:1}
+    .btn-white{display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 1.25rem;background:#fff;color:var(--navy);border:none;border-radius:.875rem;font-size:.9rem;font-weight:700;cursor:pointer;transition:all var(--trans);text-decoration:none}
+    .btn-white:hover{transform:translateY(-2px);box-shadow:0 6px 22px rgba(0,0,0,.14)}
+    .btn-ghost{display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 1.25rem;background:rgba(255,255,255,.1);color:rgba(255,255,255,.85);border:1px solid rgba(255,255,255,.2);border-radius:.875rem;font-size:.9rem;font-weight:600;cursor:pointer;transition:all var(--trans);text-decoration:none}
+    .btn-ghost:hover{background:rgba(255,255,255,.18)}
+
+    /* STATS */
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1.125rem;margin-bottom:1.75rem}
+    .stat{background:var(--white);border-radius:1.125rem;padding:1.375rem 1.5rem;box-shadow:var(--shadow);display:flex;align-items:flex-start;justify-content:space-between}
+    .stat-label{font-size:.8125rem;color:var(--gray);margin-bottom:.375rem}
+    .stat-val{font-size:1.875rem;font-weight:900;color:var(--navy-d);line-height:1;margin-bottom:.25rem}
+    .stat-note{font-size:.8125rem;font-weight:600}
+    .stat-note--up{color:var(--teal)}
+    .stat-note--gray{color:var(--gray)}
+    .stat-icon{width:42px;height:42px;border-radius:.875rem;display:flex;align-items:center;justify-content:center;font-size:1.125rem;flex-shrink:0}
+    .si--teal{background:rgba(24,202,168,.12)}
+    .si--orange{background:rgba(255,69,26,.1)}
+    .si--blue{background:rgba(66,133,244,.1)}
+    .si--amber{background:rgba(247,173,0,.1)}
+
+    /* GRID */
+    .grid{display:grid;grid-template-columns:1fr 320px;gap:1.5rem}
+
+    /* PANELS */
+    .panel{background:var(--white);border-radius:1.25rem;box-shadow:var(--shadow);overflow:hidden}
+    .panel-head{display:flex;align-items:center;justify-content:space-between;padding:1.375rem 1.5rem;border-bottom:1px solid var(--gray-lt)}
+    .panel-title{font-size:.9375rem;font-weight:700;color:var(--navy);display:flex;align-items:center;gap:.5rem}
+    .panel-action{font-size:.8125rem;font-weight:700;color:var(--teal);cursor:pointer;text-decoration:none;transition:color var(--trans);border:none;background:none}
+    .panel-action:hover{color:var(--navy)}
+    .panel-body{padding:1.375rem 1.5rem}
+
+    /* DEMOS */
+    .demo-item{display:flex;align-items:center;gap:1rem;padding:.875rem;border-radius:1rem;border:1.5px solid var(--gray-lt);margin-bottom:.625rem;transition:all var(--trans);cursor:pointer}
+    .demo-item:last-child{margin-bottom:0}
+    .demo-item:hover{border-color:var(--teal);background:rgba(24,202,168,.03)}
+    .demo-date{min-width:48px;text-align:center;background:var(--off);border-radius:.75rem;padding:.5rem .375rem}
+    .demo-date-day{font-size:1.375rem;font-weight:900;color:var(--navy);line-height:1}
+    .demo-date-mo{font-size:.6875rem;font-weight:700;color:var(--gray);text-transform:uppercase;margin-top:.1rem}
+    .demo-info{flex:1}
+    .demo-info h4{font-size:.9rem;font-weight:700;color:var(--navy);margin-bottom:.2rem}
+    .demo-info p{font-size:.8125rem;color:var(--gray)}
+    .demo-badges{display:flex;gap:.375rem;margin-top:.375rem;flex-wrap:wrap}
+    .badge{font-size:.6875rem;font-weight:700;padding:.2rem .5rem;border-radius:100px}
+    .badge--teal{background:rgba(24,202,168,.12);color:#0e9b7e}
+    .badge--blue{background:rgba(66,133,244,.12);color:var(--google)}
+    .badge--orange{background:rgba(255,69,26,.1);color:var(--orange)}
+    .badge--ms{background:rgba(0,120,212,.1);color:var(--ms)}
+    .status-pill{font-size:.75rem;font-weight:700;padding:.3rem .75rem;border-radius:100px;white-space:nowrap}
+    .sp--upcoming{background:rgba(24,202,168,.12);color:#0e9b7e}
+    .sp--pending{background:rgba(247,173,0,.15);color:#b07d00}
+
+    /* EMPTY STATE */
+    .empty{text-align:center;padding:2.5rem 1rem}
+    .empty-icon{font-size:2.5rem;margin-bottom:.875rem}
+    .empty p{font-size:.9375rem;color:var(--gray);margin-bottom:1.25rem;line-height:1.6}
+    .btn-primary{display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 1.375rem;background:var(--orange);color:#fff;border:none;border-radius:.875rem;font-size:.875rem;font-weight:700;cursor:pointer;transition:all var(--trans);text-decoration:none}
+    .btn-primary:hover{background:var(--orange-h);transform:translateY(-1px);box-shadow:0 4px 16px rgba(255,69,26,.28)}
+
+    /* ACTIVITY */
+    .act-item{display:flex;gap:.875rem;align-items:flex-start;padding:.75rem 0;border-bottom:1px solid var(--gray-lt)}
+    .act-item:last-child{border-bottom:none;padding-bottom:0}
+    .act-dot{width:8px;height:8px;border-radius:50%;margin-top:.35rem;flex-shrink:0}
+    .act-dot--teal{background:var(--teal)}
+    .act-dot--orange{background:var(--orange)}
+    .act-dot--blue{background:var(--google)}
+    .act-body{font-size:.875rem;color:var(--gray-dk);line-height:1.5}
+    .act-body strong{color:var(--navy)}
+    .act-time{font-size:.75rem;color:var(--gray);margin-top:.125rem}
+
+    /* QUICK ACTIONS */
+    .qa-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+    .qa-btn{background:var(--off);border:1.5px solid var(--gray-lt);border-radius:1rem;padding:1.125rem .875rem;text-align:center;cursor:pointer;transition:all var(--trans);text-decoration:none;display:block;font-family:'Roboto',sans-serif;width:100%}
+    .qa-btn:hover{border-color:var(--orange);background:var(--white);box-shadow:var(--shadow);transform:translateY(-2px)}
+    .qa-btn--support{border-color:rgba(24,202,168,.3);background:rgba(24,202,168,.05)}
+    .qa-btn--support:hover{border-color:var(--teal);background:rgba(24,202,168,.08)}
+    .qa-icon{font-size:1.375rem;margin-bottom:.5rem}
+    .qa-label{font-size:.8125rem;font-weight:700;color:var(--navy)}
+
+    /* INTEGRATIONS */
+    .int-item{display:flex;align-items:center;gap:.875rem;padding:.875rem;border-radius:.875rem;border:1.5px solid var(--gray-lt);margin-bottom:.625rem;transition:all var(--trans)}
+    .int-item:last-child{margin-bottom:0}
+    .int-item:hover{border-color:#bbb}
+    .int-logo{width:38px;height:38px;border-radius:.625rem;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+    .il--google{background:rgba(66,133,244,.1)}
+    .il--ms{background:rgba(0,120,212,.1)}
+    .il--qr{background:rgba(255,69,26,.1)}
+    .int-info strong{display:block;font-size:.875rem;font-weight:700;color:var(--navy)}
+    .int-info span{font-size:.8125rem;color:var(--gray)}
+    .toggle{position:relative;width:40px;height:22px;flex-shrink:0}
+    .toggle input{opacity:0;width:0;height:0}
+    .toggle-track{position:absolute;inset:0;border-radius:100px;background:var(--gray-lt);cursor:pointer;transition:background var(--trans)}
+    .toggle-track::after{content:'';position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:3px;left:3px;transition:transform var(--trans);box-shadow:0 1px 3px rgba(0,0,0,.2)}
+    .toggle input:checked+.toggle-track{background:var(--teal)}
+    .toggle input:checked+.toggle-track::after{transform:translateX(18px)}
+    .btn-connect{font-size:.8125rem;font-weight:700;padding:.3rem .75rem;border-radius:100px;border:1.5px solid var(--teal);color:var(--teal);background:transparent;cursor:pointer;transition:all var(--trans);white-space:nowrap}
+    .btn-connect:hover{background:var(--teal);color:#fff}
+    .btn-connected{font-size:.8125rem;font-weight:700;padding:.3rem .75rem;border-radius:100px;border:1.5px solid rgba(24,202,168,.3);color:#0e9b7e;background:rgba(24,202,168,.1)}
+
+    /* PROFILE SECTION */
+    .profile-header{display:flex;align-items:center;gap:1.25rem;padding:1.5rem;border-bottom:1px solid var(--gray-lt)}
+    .profile-info h3{font-size:1.125rem;font-weight:700;color:var(--navy);margin-bottom:.2rem}
+    .profile-info p{font-size:.875rem;color:var(--gray)}
+    .provider-tag{display:inline-flex;align-items:center;gap:.375rem;font-size:.75rem;font-weight:700;padding:.25rem .625rem;border-radius:100px;margin-top:.5rem}
+    .pt--google{background:rgba(66,133,244,.1);color:var(--google)}
+    .pt--microsoft{background:rgba(0,120,212,.1);color:var(--ms)}
+    .pt--email{background:rgba(21,37,80,.07);color:var(--navy)}
+    .profile-fields{padding:1.5rem;display:flex;flex-direction:column;gap:.875rem;border-bottom:1px solid var(--gray-lt)}
+    .pf{display:flex;justify-content:space-between;align-items:center;font-size:.9rem}
+    .pf-label{color:var(--gray);font-weight:500}
+    .pf-val{color:var(--navy);font-weight:600;text-align:right;max-width:200px;overflow:hidden;text-overflow:ellipsis}
+    .profile-edit{padding:1.5rem}
+    .form-group{margin-bottom:.875rem}
+    .form-label{display:block;font-size:.875rem;font-weight:600;color:var(--navy);margin-bottom:.375rem}
+    .form-input{width:100%;padding:.8rem 1rem;border:1.5px solid var(--gray-lt);border-radius:.75rem;font-size:.9375rem;font-family:'Roboto',sans-serif;color:var(--navy-d);outline:none;transition:border-color var(--trans)}
+    .form-input:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(24,202,168,.12)}
+    .btn-save{width:100%;padding:.875rem;background:var(--orange);color:#fff;border:none;border-radius:.875rem;font-size:.9375rem;font-weight:700;cursor:pointer;transition:all var(--trans)}
+    .btn-save:hover{background:var(--orange-h)}
+    .save-msg{text-align:center;font-size:.875rem;font-weight:600;color:#0e9b7e;margin-top:.625rem;display:none}
+    .btn-signout{display:flex;align-items:center;justify-content:center;gap:.5rem;width:100%;padding:.875rem;background:transparent;border:1.5px solid rgba(255,69,26,.25);color:var(--orange);border-radius:.875rem;font-size:.9rem;font-weight:700;cursor:pointer;transition:all var(--trans);margin:1.5rem 1.5rem 1.5rem;width:calc(100% - 3rem)}
+    .btn-signout:hover{background:rgba(255,69,26,.06);border-color:var(--orange)}
+
+    /* section heading */
+    .section-wrap{display:none}
+    .section-wrap.show{display:block}
+
+    /* TABS inside panel */
+    .ptabs{display:flex;border-bottom:1px solid var(--gray-lt);padding:0 1.5rem}
+    .ptab{padding:.75rem 1rem;font-size:.875rem;font-weight:600;color:var(--gray);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all var(--trans)}
+    .ptab.active{color:var(--navy);border-bottom-color:var(--orange)}
+
+    /* SPIN */
+    .spin{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* RESPONSIVE */
+    @media(max-width:1200px){.stats{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:960px){.grid{grid-template-columns:1fr}}
+    @media(max-width:768px){
+      .sidebar{transform:translateX(-100%)}
+      .sidebar.open{transform:translateX(0)}
+      .main{margin-left:0}
+      .hamburger{display:block}
+      .topbar{padding:0 1.25rem}
+      .content{padding:1.25rem 1.25rem 4rem}
+      .stats{grid-template-columns:1fr 1fr}
+    }
+    @media(max-width:480px){.stats{grid-template-columns:1fr}.welcome{flex-direction:column;align-items:flex-start}}
+  </style>
+</head>
+<body>
+
+<!-- ══ SIDEBAR ══ -->
+<aside class="sidebar" id="sidebar">
+  <a href="index.html" class="sb-logo">
+    <div class="sb-logo-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+    </div>
+    <span class="sb-logo-name">Contribute<em>AI</em></span>
+  </a>
+
+  <div class="sb-section">
+    <div class="sb-section-label">Menu</div>
+    <button class="sb-item active" onclick="showSection('overview',this)"><span class="sb-icon">🏠</span> Overview</button>
+    <button class="sb-item" onclick="showSection('demos',this)"><span class="sb-icon">📅</span> My Demos <span class="sb-badge" id="demoBadge">0</span></button>
+    <button class="sb-item" onclick="showSection('profile',this)"><span class="sb-icon">👤</span> My Profile</button>
+    <button class="sb-item" onclick="showSection('integrations',this)"><span class="sb-icon">🔗</span> Integrations</button>
+    <button class="sb-item" onclick="showSection('support',this)"><span class="sb-icon">🎫</span> Support</button>
+  </div>
+
+  <div class="sb-section">
+    <div class="sb-section-label">Quick</div>
+    <a class="sb-item" href="book-demo.html"><span class="sb-icon">➕</span> Book a Demo</a>
+    <a class="sb-item" href="index.html"><span class="sb-icon">🌐</span> Website</a>
+    <a class="sb-item" href="index.html#platform"><span class="sb-icon">🤖</span> CCAI Platform</a>
+  </div>
+
+  <div class="sb-footer">
+    <div class="sb-user" onclick="showSection('profile', document.querySelector('.sb-item:nth-child(3)'))">
+      <div class="avatar" id="sbAvatar">?</div>
+      <div>
+        <div class="sb-user-name" id="sbName">Loading…</div>
+        <div class="sb-user-role" id="sbEmail"></div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- ══ MAIN ══ -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="hamburger" onclick="toggleSidebar()">☰</button>
+      <span class="topbar-title" id="topbarTitle">Overview</span>
+    </div>
+    <div class="topbar-right">
+      <div class="icon-btn" style="position:relative">🔔<div class="notif-dot"></div></div>
+      <button class="btn-top btn-top--ghost" onclick="openSupport()">🎫 Request Support</button>
+      <a href="book-demo.html" class="btn-top">📅 Book Demo</a>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ══ OVERVIEW ══ -->
+    <div id="secOverview" class="section-wrap show">
+
+      <div class="welcome">
+        <div class="welcome-text">
+          <h2>Welcome back, <span id="welcomeName">there</span> 👋</h2>
+          <p id="welcomeSub">Signed in to your ContributeAI dashboard.</p>
+        </div>
+        <div class="welcome-actions">
+          <a href="book-demo.html" class="btn-white">📅 Book a Demo</a>
+          <button onclick="openSupport()" class="btn-ghost">🎫 Request Support</button>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stat">
+          <div><div class="stat-label">Demos Booked</div><div class="stat-val" id="statDemos">0</div><div class="stat-note stat-note--up">↑ All time</div></div>
+          <div class="stat-icon si--teal">📅</div>
+        </div>
+        <div class="stat">
+          <div><div class="stat-label">Connected Apps</div><div class="stat-val" id="statApps">0</div><div class="stat-note stat-note--up">Active</div></div>
+          <div class="stat-icon si--blue">🔗</div>
+        </div>
+        <div class="stat">
+          <div><div class="stat-label">Account Plan</div><div class="stat-val" style="font-size:1.25rem;line-height:1.4">Free</div><div class="stat-note stat-note--gray">Upgrade available</div></div>
+          <div class="stat-icon si--orange">⭐</div>
+        </div>
+        <div class="stat">
+          <div><div class="stat-label">Sign-in Method</div><div class="stat-val" style="font-size:1.125rem;line-height:1.4" id="statProvider">—</div><div class="stat-note stat-note--up">SSO Active</div></div>
+          <div class="stat-icon si--amber">🔐</div>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div style="display:flex;flex-direction:column;gap:1.5rem">
+
+          <!-- Upcoming Demos -->
+          <div class="panel">
+            <div class="panel-head">
+              <span class="panel-title">📅 Upcoming Demos</span>
+              <a class="panel-action" href="book-demo.html">+ Book new</a>
+            </div>
+            <div class="panel-body" id="demoListOverview"></div>
+          </div>
+
+          <!-- Activity -->
+          <div class="panel">
+            <div class="panel-head"><span class="panel-title">⚡ Activity</span></div>
+            <div class="panel-body">
+              <div class="act-item"><div class="act-dot act-dot--teal"></div><div><div class="act-body"><strong>Account created</strong> — welcome to ContributeAI</div><div class="act-time">Just now</div></div></div>
+              <div class="act-item"><div class="act-dot act-dot--blue"></div><div><div class="act-body"><strong>Signed in</strong> via <span id="actProvider">—</span></div><div class="act-time">Just now</div></div></div>
+              <div class="act-item"><div class="act-dot act-dot--orange"></div><div><div class="act-body">Visit <a href="book-demo.html" style="color:var(--teal);font-weight:600;">Book a Demo</a> to schedule your live walkthrough</div><div class="act-time">Recommended next step</div></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:1.5rem">
+
+          <!-- Quick Actions -->
+          <div class="panel">
+            <div class="panel-head"><span class="panel-title">Quick Actions</span></div>
+            <div class="panel-body">
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem">
+                <a href="book-demo.html" class="qa-btn"><div class="qa-icon">📅</div><div class="qa-label">Book Demo</div></a>
+                <button onclick="openSupport()" class="qa-btn qa-btn--support"><div class="qa-icon">🎫</div><div class="qa-label">Request Support</div></button>
+                <a onclick="showSection('integrations')" class="qa-btn"><div class="qa-icon">🔗</div><div class="qa-label">Integrations</div></a>
+                <a href="index.html#platform" class="qa-btn"><div class="qa-icon">🤖</div><div class="qa-label">CCAI Docs</div></a>
+                <a onclick="showSection('profile')" class="qa-btn"><div class="qa-icon">👤</div><div class="qa-label">My Profile</div></a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Integrations mini -->
+          <div class="panel">
+            <div class="panel-head">
+              <span class="panel-title">🔗 Integrations</span>
+              <button class="panel-action" onclick="showSection('integrations')">Manage</button>
+            </div>
+            <div class="panel-body">
+              <div class="int-item">
+                <div class="int-logo il--google"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg></div>
+                <div class="int-info"><strong>Google Workspace</strong><span>Gmail · Calendar</span></div>
+                <button class="btn-connect" id="googleMiniBtn" onclick="connectInt('google')">Connect</button>
+              </div>
+              <div class="int-item">
+                <div class="int-logo il--ms"><svg width="18" height="18" viewBox="0 0 23 23"><rect x="1" y="1" width="10" height="10" fill="#F25022"/><rect x="12" y="1" width="10" height="10" fill="#7FBA00"/><rect x="1" y="12" width="10" height="10" fill="#00A4EF"/><rect x="12" y="12" width="10" height="10" fill="#FFB900"/></svg></div>
+                <div class="int-info"><strong>Microsoft Outlook</strong><span>Calendar · Teams</span></div>
+                <button class="btn-connect" id="outlookMiniBtn" onclick="connectInt('outlook')">Connect</button>
+              </div>
+              <div class="int-item">
+                <div class="int-logo il--qr">⬛</div>
+                <div class="int-info"><strong>QR Pro App</strong><span>iOS App</span></div>
+                <label class="toggle"><input type="checkbox" id="qrToggle" onchange="toggleInt('qr',this.checked)"><span class="toggle-track"></span></label>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ MY DEMOS ══ -->
+    <div id="secDemos" class="section-wrap">
+      <div class="welcome" style="margin-bottom:1.75rem">
+        <div class="welcome-text"><h2>My Demos 📅</h2><p>All your scheduled ContributeAI demo sessions.</p></div>
+        <div class="welcome-actions"><a href="book-demo.html" class="btn-white">+ Book New Demo</a></div>
+      </div>
+      <div class="panel">
+        <div class="ptabs">
+          <div class="ptab active">Upcoming</div>
+          <div class="ptab">Past</div>
+        </div>
+        <div class="panel-body" id="demoListFull" style="padding-top:1.25rem"></div>
+      </div>
+    </div>
+
+    <!-- ══ PROFILE ══ -->
+    <div id="secProfile" class="section-wrap">
+      <div class="welcome" style="margin-bottom:1.75rem">
+        <div class="welcome-text"><h2>My Profile 👤</h2><p>Manage your account details.</p></div>
+      </div>
+      <div class="grid" style="grid-template-columns:1fr 1fr">
+        <div class="panel">
+          <div class="profile-header">
+            <div class="avatar-lg" id="profileAvatar">?</div>
+            <div class="profile-info">
+              <h3 id="profileName">—</h3>
+              <p id="profileEmailTxt">—</p>
+              <div class="provider-tag" id="profileProvider">—</div>
+            </div>
+          </div>
+          <div class="profile-fields" id="profileFields"></div>
+          <button class="btn-signout" onclick="signOut()">⬅ Sign Out</button>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><span class="panel-title">✏️ Edit Profile</span></div>
+          <div class="panel-body">
+            <div class="profile-edit">
+              <div class="form-group"><label class="form-label">Full Name</label><input type="text" class="form-input" id="editName" /></div>
+              <div class="form-group"><label class="form-label">Company</label><input type="text" class="form-input" id="editCompany" /></div>
+              <div class="form-group"><label class="form-label">Phone</label><input type="tel" class="form-input" id="editPhone" placeholder="+1 (555) 000-0000"/></div>
+              <div class="form-group"><label class="form-label">Job Title</label><input type="text" class="form-input" id="editTitle" placeholder="e.g. Operations Manager"/></div>
+              <div class="form-group"><label class="form-label">Client Number</label><input type="text" class="form-input" id="editClientNum" placeholder="e.g. CAI-00123"/></div>
+              <button class="btn-save" onclick="saveProfile()">Save Changes</button>
+              <div class="save-msg" id="saveMsg">✓ Profile saved!</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ INTEGRATIONS ══ -->
+    <div id="secIntegrations" class="section-wrap">
+      <div class="welcome" style="margin-bottom:1.75rem">
+        <div class="welcome-text"><h2>Connected Apps 🔗</h2><p>Connect Google, Microsoft and Outlook for seamless calendar bookings.</p></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem">
+
+        <div class="panel" style="padding:1.75rem">
+          <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem">
+            <div style="width:50px;height:50px;background:rgba(66,133,244,.1);border-radius:.875rem;display:flex;align-items:center;justify-content:center"><svg width="26" height="26" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg></div>
+            <div><div style="font-size:1rem;font-weight:700;color:var(--navy)">Google Workspace</div><div style="font-size:.8125rem;color:var(--gray)">Gmail · Calendar · Meet</div></div>
+          </div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.5rem">
+            <li style="font-size:.875rem;color:var(--gray-dk)">✓ Read/write Google Calendar events</li>
+            <li style="font-size:.875rem;color:var(--gray-dk)">✓ Send confirmation emails via Gmail</li>
+            <li style="font-size:.875rem;color:var(--gray-dk)">✓ Auto-create Google Meet links</li>
+          </ul>
+          <button id="googleIntBtn" onclick="connectInt('google')" style="width:100%;padding:.875rem;border:1.5px solid #dadce0;border-radius:.875rem;background:#fff;color:var(--gray-dk);font-size:.9375rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.625rem;transition:all .22s">Connect Google Workspace →</button>
+        </div>
+
+        <div class="panel" style="padding:1.75rem">
+          <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem">
+            <div style="width:50px;height:50px;background:rgba(0,120,212,.1);border-radius:.875rem;display:flex;align-items:center;justify-content:center"><svg width="26" height="26" viewBox="0 0 23 23"><rect x="1" y="1" width="10" height="10" fill="#F25022"/><rect x="12" y="1" width="10" height="10" fill="#7FBA00"/><rect x="1" y="12" width="10" height="10" fill="#00A4EF"/><rect x="12" y="12" width="10" height="10" fill="#FFB900"/></svg></div>
+            <div><div style="font-size:1rem;font-weight:700;color:var(--navy)">Microsoft 365 / Outlook</div><div style="font-size:.8125rem;color:var(--gray)">Outlook Calendar · Exchange · Teams</div></div>
+          </div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.5rem">
+            <li style="font-size:.875rem;color:var(--gray-dk)">✓ Read/write Outlook Calendar</li>
+            <li style="font-size:.875rem;color:var(--gray-dk)">✓ Send confirmation via Outlook email</li>
+            <li style="font-size:.875rem;color:var(--gray-dk)">✓ Auto-generate Microsoft Teams links</li>
+          </ul>
+          <button id="outlookIntBtn" onclick="connectInt('outlook')" style="width:100%;padding:.875rem;border:1.5px solid #dadce0;border-radius:.875rem;background:#fff;color:var(--gray-dk);font-size:.9375rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.625rem;transition:all .22s">Connect Microsoft Outlook →</button>
+        </div>
+
+        <div class="panel" style="padding:1.75rem">
+          <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem">
+            <div style="width:50px;height:50px;background:rgba(255,69,26,.1);border-radius:.875rem;display:flex;align-items:center;justify-content:center;font-size:1.5rem">⬛</div>
+            <div><div style="font-size:1rem;font-weight:700;color:var(--navy)">QR Pro App</div><div style="font-size:.8125rem;color:var(--gray)">iOS · Scanner · Generator · File Reader</div></div>
+          </div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.5rem">
+            <li style="font-size:.875rem;color:var(--gray-dk)">✓ Generate QR codes for URLs, WiFi, email</li>
+            <li style="font-size:.875rem;color:var(--gray-dk)">✓ Live camera scanning with torch</li>
+            <li style="font-size:.875rem;color:var(--gray-dk)">✓ Extract QR from images &amp; PDFs</li>
+          </ul>
+          <button style="width:100%;padding:.875rem;border:none;border-radius:.875rem;background:var(--orange);color:#fff;font-size:.9375rem;font-weight:700;cursor:pointer">Download on App Store →</button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══ SUPPORT ══ -->
+    <div id="secSupport" class="section-wrap">
+      <div class="welcome" style="margin-bottom:1.75rem">
+        <div class="welcome-text">
+          <h2>Support 🎫</h2>
+          <p>Need help? Send us a message and we'll get back to you within 1 business day.</p>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 340px;gap:1.5rem;align-items:start">
+
+        <!-- Request form -->
+        <div class="panel">
+          <div class="panel-head"><span class="panel-title">Submit a Support Request</span></div>
+          <div class="panel-body">
+            <div id="supportDone" style="display:none;text-align:center;padding:2.5rem 1rem">
+              <div style="font-size:2.5rem;margin-bottom:1rem">✅</div>
+              <h3 style="font-size:1.25rem;font-weight:700;color:var(--navy);margin-bottom:.5rem">Request Sent!</h3>
+              <p style="font-size:.9375rem;color:var(--gray);line-height:1.6;margin-bottom:1.5rem">We received your message and will reply to <strong id="supportReplyEmail">you</strong> within 1 business day.</p>
+              <button class="btn-primary" onclick="resetSupport()">Send Another Request</button>
+            </div>
+            <form id="supportForm" onsubmit="submitSupport(event)">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem">
+                <div class="form-group"><label class="form-label">Full Name</label><input type="text" class="form-input" id="supName" required /></div>
+                <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="supEmail" required /></div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem">
+                <div class="form-group">
+                  <label class="form-label">Client Number</label>
+                  <input type="text" class="form-input" id="supClientNum" placeholder="e.g. CAI-00123" />
+                  <div style="font-size:.75rem;color:var(--gray);margin-top:.3rem">Your ContributeAI account / client ID</div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Category</label>
+                  <select class="form-input" id="supCategory">
+                    <option value="Technical Issue">Technical Issue</option>
+                    <option value="Integration Help">Integration Help</option>
+                    <option value="Demo / Sales">Demo / Sales</option>
+                    <option value="Billing">Billing</option>
+                    <option value="General Question">General Question</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group"><label class="form-label">Subject</label><input type="text" class="form-input" id="supSubject" placeholder="Brief description of your issue" required /></div>
+              <div class="form-group">
+                <label class="form-label">Message</label>
+                <textarea class="form-input" id="supMessage" rows="5" placeholder="Please describe your issue or question in detail…" required style="resize:vertical;line-height:1.6"></textarea>
+              </div>
+              <div id="supAlert" style="display:none;padding:.75rem 1rem;border-radius:.75rem;font-size:.875rem;font-weight:500;margin-bottom:1rem;border:1px solid rgba(255,69,26,.2);background:rgba(255,69,26,.07);color:var(--orange)"></div>
+              <button type="submit" id="supSubmitBtn" style="width:100%;padding:.9375rem;background:var(--orange);color:#fff;border:none;border-radius:.875rem;font-size:1rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.5rem;transition:all .22s">
+                Send Request →
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Contact info / FAQ -->
+        <div style="display:flex;flex-direction:column;gap:1.25rem">
+          <div class="panel" style="padding:1.5rem">
+            <div style="font-size:.875rem;font-weight:700;color:var(--navy);margin-bottom:1rem">📬 Contact Us Directly</div>
+            <div style="display:flex;flex-direction:column;gap:.875rem">
+              <div style="display:flex;align-items:flex-start;gap:.75rem">
+                <div style="width:36px;height:36px;background:rgba(24,202,168,.1);border-radius:.625rem;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0">✉️</div>
+                <div><div style="font-size:.8125rem;font-weight:700;color:var(--navy)">Email</div><a href="mailto:a@contributeai.org" style="font-size:.8125rem;color:var(--teal);font-weight:600;text-decoration:none">a@contributeai.org</a></div>
+              </div>
+              <div style="display:flex;align-items:flex-start;gap:.75rem">
+                <div style="width:36px;height:36px;background:rgba(255,69,26,.1);border-radius:.625rem;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0">📅</div>
+                <div><div style="font-size:.8125rem;font-weight:700;color:var(--navy)">Book a Call</div><a href="book-demo.html" style="font-size:.8125rem;color:var(--teal);font-weight:600;text-decoration:none">Schedule a demo →</a></div>
+              </div>
+              <div style="display:flex;align-items:flex-start;gap:.75rem">
+                <div style="width:36px;height:36px;background:rgba(21,37,80,.07);border-radius:.625rem;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0">⏱</div>
+                <div><div style="font-size:.8125rem;font-weight:700;color:var(--navy)">Response Time</div><div style="font-size:.8125rem;color:var(--gray)">Within 1 business day</div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel" style="padding:1.5rem">
+            <div style="font-size:.875rem;font-weight:700;color:var(--navy);margin-bottom:.875rem">💡 Common Questions</div>
+            <div style="display:flex;flex-direction:column;gap:.75rem">
+              <details style="font-size:.875rem">
+                <summary style="font-weight:600;color:var(--navy);cursor:pointer;line-height:1.5">How do I connect Google Calendar?</summary>
+                <p style="color:var(--gray);margin-top:.5rem;line-height:1.6">Go to Integrations and click "Connect Google Workspace". You'll be prompted to authorize access.</p>
+              </details>
+              <details style="font-size:.875rem">
+                <summary style="font-weight:600;color:var(--navy);cursor:pointer;line-height:1.5">How do I book a demo?</summary>
+                <p style="color:var(--gray);margin-top:.5rem;line-height:1.6">Click "Book Demo" in the top navigation or sidebar to schedule a 45-minute session with our team.</p>
+              </details>
+              <details style="font-size:.875rem">
+                <summary style="font-weight:600;color:var(--navy);cursor:pointer;line-height:1.5">What is Google CCAI?</summary>
+                <p style="color:var(--gray);margin-top:.5rem;line-height:1.6">Google Contact Center AI (CCAI) is a suite of AI tools including Dialogflow CX and Vertex AI for automating call center operations.</p>
+              </details>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<script>
+  let user = null;
+  let integrations = JSON.parse(localStorage.getItem('cai_integrations')||'{}');
+
+  // ── INIT ────────────────────────────────────────────────────────────────────
+  window.addEventListener('load', () => {
+    const saved = localStorage.getItem('cai_user');
+    if (!saved) { window.location.href = 'signup.html'; return; }
+    user = JSON.parse(saved);
+    renderUser();
+    renderIntegrations();
+    renderDemos();
+  });
+
+  // ── RENDER USER ─────────────────────────────────────────────────────────────
+  function renderUser() {
+    const name     = user.name || 'User';
+    const initials = name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    const first    = name.split(' ')[0];
+    const provider = user.provider || 'email';
+
+    // Sidebar
+    document.getElementById('sbAvatar').textContent   = initials;
+    document.getElementById('sbName').textContent     = name;
+    document.getElementById('sbEmail').textContent    = user.email || '';
+
+    // Welcome
+    document.getElementById('welcomeName').textContent = first;
+    document.getElementById('welcomeSub').textContent  = `${provLabel(provider)} · ${user.email||''}`;
+
+    // Stats
+    document.getElementById('statProvider').textContent = provLabel(provider);
+    document.getElementById('actProvider').textContent  = provLabel(provider);
+
+    // Profile
+    document.getElementById('profileAvatar').textContent = initials;
+    document.getElementById('profileName').textContent   = name;
+    document.getElementById('profileEmailTxt').textContent = user.email || '—';
+
+    const pb = document.getElementById('profileProvider');
+    pb.className = `provider-tag pt--${provider}`;
+    pb.textContent = `Signed in with ${provLabel(provider)}`;
+
+    document.getElementById('profileFields').innerHTML = `
+      <div class="pf"><span class="pf-label">Name</span><span class="pf-val">${name}</span></div>
+      <div class="pf"><span class="pf-label">Email</span><span class="pf-val">${user.email||'—'}</span></div>
+      <div class="pf"><span class="pf-label">Company</span><span class="pf-val">${user.company||'—'}</span></div>
+      <div class="pf"><span class="pf-label">Phone</span><span class="pf-val">${user.phone||'—'}</span></div>
+      <div class="pf"><span class="pf-label">Title</span><span class="pf-val">${user.title||'—'}</span></div>
+      <div class="pf"><span class="pf-label">Client No.</span><span class="pf-val" style="color:var(--teal);font-weight:700">${user.clientNumber||'—'}</span></div>
+      <div class="pf"><span class="pf-label">Sign-In</span><span class="pf-val">${provLabel(provider)} SSO</span></div>
+    `;
+
+    document.getElementById('editName').value        = name;
+    document.getElementById('editCompany').value     = user.company      || '';
+    document.getElementById('editPhone').value       = user.phone        || '';
+    document.getElementById('editTitle').value       = user.title        || '';
+    document.getElementById('editClientNum').value   = user.clientNumber || '';
+
+    // Auto-enable integration based on provider
+    if (provider==='google')    { integrations.google  = true; }
+    if (provider==='microsoft') { integrations.outlook = true; }
+    localStorage.setItem('cai_integrations', JSON.stringify(integrations));
+  }
+
+  function provLabel(p) { return {google:'Google',microsoft:'Microsoft',outlook:'Outlook',email:'Email'}[p]||'Email'; }
+
+  // ── DEMOS ────────────────────────────────────────────────────────────────────
+  function renderDemos() {
+    const demos = JSON.parse(localStorage.getItem('cai_demos')||'[]');
+    document.getElementById('statDemos').textContent = demos.length;
+    document.getElementById('demoBadge').textContent = demos.length;
+
+    const html = demos.length
+      ? demos.map(d=>{
+          const dt = new Date(d.start||Date.now());
+          return `<div class="demo-item">
+            <div class="demo-date"><div class="demo-date-day">${dt.getDate()}</div><div class="demo-date-mo">${dt.toLocaleString('en',{month:'short'})}</div></div>
+            <div class="demo-info">
+              <h4>${d.title||'ContributeAI Demo'}</h4>
+              <p>${dt.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})} · ${d.duration||45} min · Google Meet</p>
+              <div class="demo-badges"><span class="badge badge--teal">CCAI</span><span class="badge badge--blue">Google Calendar</span></div>
+            </div>
+            <span class="status-pill sp--upcoming">Upcoming</span>
+          </div>`;
+        }).join('')
+      : `<div class="empty"><div class="empty-icon">📭</div><p>No demos booked yet.<br>Schedule a live walkthrough with our team.</p><a href="book-demo.html" class="btn-primary">📅 Book a Demo</a></div>`;
+
+    document.getElementById('demoListOverview').innerHTML = html;
+    document.getElementById('demoListFull').innerHTML     = html;
+  }
+
+  // ── INTEGRATIONS ─────────────────────────────────────────────────────────────
+  function renderIntegrations() {
+    const count = Object.values(integrations).filter(Boolean).length;
+    document.getElementById('statApps').textContent = count;
+
+    ['google','outlook'].forEach(k=>{
+      const connected = integrations[k];
+      const mini = document.getElementById(k+'MiniBtn');
+      const full = document.getElementById(k+'IntBtn');
+      if (mini) { mini.className = connected?'btn-connected':'btn-connect'; mini.textContent = connected?'✓ Connected':'Connect'; }
+      if (full) { full.textContent = connected?`✓ ${k==='google'?'Google Workspace':'Microsoft Outlook'} Connected`:`Connect ${k==='google'?'Google Workspace':'Microsoft Outlook'} →`; if(connected){full.style.borderColor='rgba(24,202,168,.3)';full.style.color='#0e9b7e';} }
+    });
+    const qr = document.getElementById('qrToggle');
+    if (qr) qr.checked = !!integrations.qr;
+  }
+
+  function connectInt(type) {
+    integrations[type] = true;
+    localStorage.setItem('cai_integrations', JSON.stringify(integrations));
+    renderIntegrations();
+    toast(`✓ ${type==='google'?'Google Workspace':'Microsoft Outlook'} connected!`);
+  }
+
+  function toggleInt(type, val) {
+    integrations[type] = val;
+    localStorage.setItem('cai_integrations', JSON.stringify(integrations));
+    renderIntegrations();
+  }
+
+  // ── PROFILE SAVE ─────────────────────────────────────────────────────────────
+  function saveProfile() {
+    user.name         = document.getElementById('editName').value.trim()      || user.name;
+    user.company      = document.getElementById('editCompany').value.trim();
+    user.phone        = document.getElementById('editPhone').value.trim();
+    user.title        = document.getElementById('editTitle').value.trim();
+    user.clientNumber = document.getElementById('editClientNum').value.trim();
+    localStorage.setItem('cai_user', JSON.stringify(user));
+    renderUser();
+    const msg = document.getElementById('saveMsg');
+    msg.style.display='block';
+    setTimeout(()=>{ msg.style.display='none'; }, 2500);
+  }
+
+  // ── SIGN OUT ─────────────────────────────────────────────────────────────────
+  function signOut() {
+    localStorage.removeItem('cai_user');
+    window.location.href = 'signup.html';
+  }
+
+  // ── NAVIGATION ────────────────────────────────────────────────────────────────
+  const titles = { overview:'Overview', demos:'My Demos', profile:'My Profile', integrations:'Connected Apps', support:'Support' };
+
+  function showSection(name, btn) {
+    document.querySelectorAll('.section-wrap').forEach(s=>s.classList.remove('show'));
+    document.getElementById('sec'+name.charAt(0).toUpperCase()+name.slice(1))?.classList.add('show');
+    document.getElementById('topbarTitle').textContent = titles[name]||name;
+    document.querySelectorAll('.sb-item').forEach(b=>b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    if (window.innerWidth<=768) closeSidebar();
+    // Pre-fill support form with user details
+    if (name === 'support' && user) {
+      const flds = { supName: user.name, supEmail: user.email, supClientNum: user.clientNumber };
+      Object.entries(flds).forEach(([id, val]) => {
+        const el = document.getElementById(id);
+        if (el && !el.value && val) el.value = val;
+      });
+    }
+  }
+
+  function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
+  function closeSidebar()  { document.getElementById('sidebar').classList.remove('open'); }
+
+  // ── OPEN SUPPORT (called from buttons throughout dashboard) ──────────────────
+  function openSupport() {
+    const sbBtns = document.querySelectorAll('.sb-item');
+    let supportBtn = null;
+    sbBtns.forEach(b => { if (b.textContent.includes('Support')) supportBtn = b; });
+    showSection('support', supportBtn);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── SUPPORT FORM ─────────────────────────────────────────────────────────────
+  // Web3Forms — get your free access key at https://web3forms.com
+  // Enter a@contributeai.org → check inbox → copy the key → paste below
+  const W3F_KEY = '9b489ba8-cca2-4b88-97a3-2c01c7df1912';
+
+  async function submitSupport(ev) {
+    ev.preventDefault();
+    const name      = document.getElementById('supName').value.trim();
+    const email     = document.getElementById('supEmail').value.trim();
+    const clientNum = document.getElementById('supClientNum').value.trim();
+    const category  = document.getElementById('supCategory').value;
+    const subject   = document.getElementById('supSubject').value.trim();
+    const message   = document.getElementById('supMessage').value.trim();
+
+    // Persist client number to user profile
+    if (clientNum && user) {
+      user.clientNumber = clientNum;
+      localStorage.setItem('cai_user', JSON.stringify(user));
+    }
+
+    const btn = document.getElementById('supSubmitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spin"></span> Sending…';
+
+    const alertEl = document.getElementById('supAlert');
+    alertEl.style.display = 'none';
+
+    function showSuccess() {
+      document.getElementById('supportForm').style.display = 'none';
+      document.getElementById('supportDone').style.display = 'block';
+      document.getElementById('supportReplyEmail').textContent = email;
+      btn.disabled = false;
+      btn.innerHTML = 'Send Request →';
+    }
+
+    function showError(msg) {
+      alertEl.textContent = '⚠ ' + msg;
+      alertEl.style.display = 'block';
+      btn.disabled = false;
+      btn.innerHTML = 'Send Request →';
+    }
+
+    // ── Web3Forms (real email delivery, no backend) ───────────────────────────
+    if (!W3F_KEY.includes('YOUR_')) {
+      try {
+        const body = JSON.stringify({
+          access_key:    W3F_KEY,
+          subject:       '[Support] ' + subject,
+          from_name:     name,
+          email:         email,
+          client_number: clientNum || 'N/A',
+          category,
+          message:       `Name: ${name}\nEmail: ${email}\nClient Number: ${clientNum||'N/A'}\nCategory: ${category}\n\n${message}`,
+          replyto:       email
+        });
+        const res  = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body
+        });
+        const data = await res.json();
+        if (data.success) { showSuccess(); }
+        else { showError(data.message || 'Submission failed. Try again.'); }
+      } catch(e) {
+        showError('Network error. Please email a@contributeai.org directly.');
+      }
+      return;
+    }
+
+    // ── Fallback: open user's mail client (key not yet configured) ────────────
+    const mailBody = [
+      `Name:          ${name}`,
+      `Email:         ${email}`,
+      `Client Number: ${clientNum || 'N/A'}`,
+      `Category:      ${category}`,
+      '',
+      message
+    ].join('\n');
+
+    window.open(
+      `mailto:a@contributeai.org?subject=${encodeURIComponent('[Support] '+subject)}&body=${encodeURIComponent(mailBody)}`,
+      '_blank'
+    );
+    showSuccess();
+  }
+
+  function resetSupport() {
+    document.getElementById('supportForm').reset();
+    document.getElementById('supportForm').style.display = '';
+    document.getElementById('supportDone').style.display = 'none';
+    if (user) {
+      document.getElementById('supName').value      = user.name         || '';
+      document.getElementById('supEmail').value     = user.email        || '';
+      document.getElementById('supClientNum').value = user.clientNumber || '';
+    }
+  }
+
+  // ── TOAST ────────────────────────────────────────────────────────────────────
+  function toast(msg) {
+    const t = document.createElement('div');
+    t.textContent = msg;
+    Object.assign(t.style,{position:'fixed',bottom:'2rem',right:'2rem',background:'var(--navy)',color:'#fff',padding:'.875rem 1.375rem',borderRadius:'1rem',fontWeight:'700',fontSize:'.9375rem',boxShadow:'0 8px 32px rgba(0,0,0,.2)',zIndex:'9999',transition:'opacity .3s'});
+    document.body.appendChild(t);
+    setTimeout(()=>{ t.style.opacity='0'; setTimeout(()=>t.remove(),300); },2500);
+  }
+</script>
+</body>
+</html>

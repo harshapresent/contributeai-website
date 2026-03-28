@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book a Demo — ContributeAI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --orange:    #FF451A;
+      --orange-h:  #e03610;
+      --navy:      #152550;
+      --navy-d:    #0D1630;
+      --teal:      #18CAA8;
+      --amber:     #F7AD00;
+      --google-b:  #4285F4;
+      --ms-blue:   #0078D4;
+      --white:     #ffffff;
+      --off-white: #F9F8F5;
+      --gray-lt:   #f1f0ed;
+      --gray:      #6b7280;
+      --gray-dk:   #374151;
+      --radius:    1rem;
+      --shadow:    0 4px 24px rgba(21,37,80,.12);
+      --shadow-lg: 0 8px 48px rgba(21,37,80,.18);
+      --trans:     .25s ease;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Roboto', sans-serif; background: var(--off-white); color: var(--navy-d); min-height: 100vh; }
+
+    /* ── NAV ── */
+    .nav { background: var(--white); box-shadow: 0 1px 0 rgba(21,37,80,.07); position: sticky; top: 0; z-index: 100; }
+    .nav__inner { display: flex; align-items: center; justify-content: space-between; height: 72px; max-width: 1440px; margin: 0 auto; padding: 0 2rem; }
+    .nav__logo { display: flex; align-items: center; gap: .75rem; font-weight: 900; font-size: 1.2rem; color: var(--navy); text-decoration: none; }
+    .nav__logo-icon { width: 38px; height: 38px; background: var(--orange); border-radius: .625rem; display: flex; align-items: center; justify-content: center; }
+    .nav__logo em { color: var(--orange); font-style: normal; }
+    .nav__back { display: flex; align-items: center; gap: .5rem; font-size: .9375rem; font-weight: 600; color: var(--gray); text-decoration: none; transition: color var(--trans); }
+    .nav__back:hover { color: var(--navy); }
+    .nav__back svg { transition: transform var(--trans); }
+    .nav__back:hover svg { transform: translateX(-3px); }
+
+    /* ── HERO STRIP ── */
+    .hero-strip {
+      background: var(--navy-d);
+      padding: 3rem 2rem 3.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-strip::before {
+      content: '';
+      position: absolute; top: -40%; right: -5%;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(255,69,26,.18) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .hero-strip::after {
+      content: '';
+      position: absolute; bottom: -40%; left: -5%;
+      width: 350px; height: 350px;
+      background: radial-gradient(circle, rgba(24,202,168,.12) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .hero-strip__inner { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap; }
+    .hero-strip__text {}
+    .label { display: inline-block; font-size: .75rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--teal); margin-bottom: .75rem; }
+    .hero-strip__text h1 { font-size: clamp(1.75rem, 3vw, 2.5rem); font-weight: 700; color: #fff; margin-bottom: .625rem; line-height: 1.2; }
+    .hero-strip__text p { font-size: 1rem; color: rgba(255,255,255,.65); max-width: 480px; line-height: 1.75; }
+    .hero-strip__stats { display: flex; gap: 2rem; flex-wrap: wrap; }
+    .hstat { text-align: center; }
+    .hstat__num { font-size: 1.75rem; font-weight: 900; color: #fff; line-height: 1; }
+    .hstat__num--teal { color: var(--teal); }
+    .hstat__num--orange { color: var(--orange); }
+    .hstat__label { font-size: .75rem; font-weight: 500; color: rgba(255,255,255,.45); margin-top: .25rem; }
+
+    /* ── MAIN LAYOUT ── */
+    .page { max-width: 1100px; margin: 0 auto; padding: 2.5rem 2rem 5rem; }
+    .booking-grid { display: grid; grid-template-columns: 1fr 360px; gap: 2rem; align-items: start; }
+
+    /* ── CALENDAR EMBED PANEL ── */
+    .embed-panel {
+      background: var(--white);
+      border-radius: 1.5rem;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .embed-panel__header {
+      padding: 1.5rem 1.75rem 1.25rem;
+      border-bottom: 1px solid var(--gray-lt);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .embed-panel__title { font-size: 1rem; font-weight: 700; color: var(--navy); display: flex; align-items: center; gap: .625rem; }
+    .live-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--teal); animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .3; } }
+    .embed-panel__source { font-size: .8125rem; font-weight: 600; color: var(--gray); display: flex; align-items: center; gap: .375rem; }
+
+    .embed-wrap { position: relative; width: 100%; background: var(--white); border-radius: 0 0 1.5rem 1.5rem; overflow: hidden; }
+
+    /* Calendly inline widget */
+    .calendly-inline-widget { min-width: 100%; height: 750px; }
+
+    /* Setup placeholder (shown before Calendly URL is configured) */
+    .setup-placeholder {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; min-height: 600px; padding: 3rem 2rem; text-align: center;
+    }
+    .setup-placeholder__icon { font-size: 3rem; margin-bottom: 1.25rem; }
+    .setup-placeholder h3 { font-size: 1.25rem; font-weight: 700; color: var(--navy); margin-bottom: .75rem; }
+    .setup-placeholder p { font-size: .9375rem; color: var(--gray); line-height: 1.7; max-width: 400px; margin-bottom: 2rem; }
+    .setup-steps { background: var(--off-white); border-radius: 1rem; padding: 1.5rem; text-align: left; width: 100%; max-width: 440px; }
+    .setup-step { display: flex; gap: .875rem; align-items: flex-start; margin-bottom: .875rem; }
+    .setup-step:last-child { margin-bottom: 0; }
+    .setup-num { width: 26px; height: 26px; background: var(--orange); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .75rem; font-weight: 800; flex-shrink: 0; margin-top: .1rem; }
+    .setup-step p { font-size: .875rem; color: var(--gray-dk); line-height: 1.55; }
+    .setup-step p strong { color: var(--navy); }
+    .code-chip { display: inline-block; background: rgba(21,37,80,.08); color: var(--navy); font-family: monospace; font-size: .8125rem; padding: .1rem .45rem; border-radius: .375rem; }
+
+    /* ── RIGHT PANEL ── */
+    .side-stack { display: flex; flex-direction: column; gap: 1.25rem; }
+
+    .info-panel { background: var(--white); border-radius: 1.25rem; box-shadow: var(--shadow); overflow: hidden; }
+    .info-panel__header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--gray-lt); display: flex; align-items: center; gap: .625rem; }
+    .info-panel__title { font-size: .9375rem; font-weight: 700; color: var(--navy); }
+    .info-panel__body { padding: 1.25rem 1.5rem; }
+
+    /* What to expect */
+    .expect-list { display: flex; flex-direction: column; gap: .875rem; }
+    .expect-item { display: flex; gap: .875rem; align-items: flex-start; }
+    .expect-icon { width: 36px; height: 36px; border-radius: .625rem; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+    .expect-icon--teal { background: rgba(24,202,168,.12); }
+    .expect-icon--orange { background: rgba(255,69,26,.1); }
+    .expect-icon--blue { background: rgba(66,133,244,.1); }
+    .expect-icon--amber { background: rgba(247,173,0,.1); }
+    .expect-text h4 { font-size: .9rem; font-weight: 700; color: var(--navy); margin-bottom: .2rem; }
+    .expect-text p { font-size: .8125rem; color: var(--gray); line-height: 1.55; }
+
+    /* Email auto-send notice */
+    .email-notice {
+      background: rgba(24,202,168,.07);
+      border: 1px solid rgba(24,202,168,.25);
+      border-radius: 1rem;
+      padding: 1.125rem 1.25rem;
+      display: flex; gap: .875rem; align-items: flex-start;
+    }
+    .email-notice__icon { font-size: 1.375rem; flex-shrink: 0; }
+    .email-notice h4 { font-size: .875rem; font-weight: 700; color: var(--navy); margin-bottom: .25rem; }
+    .email-notice p { font-size: .8125rem; color: var(--gray); line-height: 1.55; }
+    .email-notice strong { color: #0e9b7e; }
+
+    /* Integrations row */
+    .int-row { display: flex; gap: .625rem; flex-wrap: wrap; }
+    .int-pill {
+      display: flex; align-items: center; gap: .375rem;
+      padding: .375rem .875rem;
+      border-radius: 100px;
+      font-size: .8125rem; font-weight: 700;
+      border: 1.5px solid;
+    }
+    .int-pill--google { color: var(--google-b); border-color: rgba(66,133,244,.25); background: rgba(66,133,244,.07); }
+    .int-pill--outlook { color: var(--ms-blue); border-color: rgba(0,120,212,.25); background: rgba(0,120,212,.07); }
+    .int-pill--meet { color: #0e9b7e; border-color: rgba(24,202,168,.3); background: rgba(24,202,168,.08); }
+
+    /* How it works */
+    .flow-list { display: flex; flex-direction: column; gap: 0; }
+    .flow-row { display: flex; gap: .875rem; align-items: flex-start; padding: .75rem 0; position: relative; }
+    .flow-row:not(:last-child)::after { content: ''; position: absolute; left: 13px; top: 38px; bottom: -8px; width: 1.5px; background: var(--gray-lt); }
+    .flow-num { width: 26px; height: 26px; border-radius: 50%; background: var(--navy); color: #fff; font-size: .75rem; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .flow-row p { font-size: .875rem; color: var(--gray-dk); line-height: 1.55; padding-top: .2rem; }
+    .flow-row p strong { color: var(--navy); display: block; font-size: .875rem; margin-bottom: .1rem; }
+
+    /* CTA box */
+    .cta-box {
+      background: linear-gradient(135deg, var(--navy-d) 0%, #1a2f5e 100%);
+      border-radius: 1.25rem;
+      padding: 1.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-box::before { content: ''; position: absolute; top: -30%; right: -10%; width: 200px; height: 200px; background: radial-gradient(circle, rgba(255,69,26,.2) 0%, transparent 65%); pointer-events: none; }
+    .cta-box h4 { font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: .375rem; position: relative; }
+    .cta-box p { font-size: .8125rem; color: rgba(255,255,255,.55); margin-bottom: 1.25rem; line-height: 1.6; position: relative; }
+    .btn-cta { display: inline-flex; align-items: center; gap: .5rem; padding: .75rem 1.5rem; background: var(--orange); color: #fff; border-radius: .875rem; font-size: .875rem; font-weight: 700; text-decoration: none; border: none; cursor: pointer; transition: all var(--trans); position: relative; }
+    .btn-cta:hover { background: var(--orange-h); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255,69,26,.35); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 920px) {
+      .booking-grid { grid-template-columns: 1fr; }
+      .hero-strip__stats { display: none; }
+    }
+    @media (max-width: 540px) {
+      .page { padding: 1.5rem 1rem 4rem; }
+      .hero-strip { padding: 2rem 1.25rem 2.5rem; }
+      .embed-wrap iframe { height: 650px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav class="nav">
+  <div class="nav__inner">
+    <a href="index.html" class="nav__logo">
+      <div class="nav__logo-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/>
+        </svg>
+      </div>
+      Contribute<em>AI</em>
+    </a>
+    <a href="index.html" class="nav__back">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      Back to site
+    </a>
+  </div>
+</nav>
+
+<!-- ── HERO STRIP ── -->
+<div class="hero-strip">
+  <div class="hero-strip__inner">
+    <div class="hero-strip__text">
+      <span class="label">Schedule a Live Demo</span>
+      <h1>See ContributeAI in Action</h1>
+      <p>Pick a time that works for you. Our team will walk through the AI virtual agent live — using your call center as the example.</p>
+    </div>
+    <div class="hero-strip__stats">
+      <div class="hstat"><div class="hstat__num hstat__num--teal">45 min</div><div class="hstat__label">Demo length</div></div>
+      <div class="hstat"><div class="hstat__num hstat__num--orange">Free</div><div class="hstat__label">No commitment</div></div>
+      <div class="hstat"><div class="hstat__num">Live</div><div class="hstat__label">Real AI demo</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── PAGE ── -->
+<div class="page">
+  <div class="booking-grid">
+
+    <!-- LEFT: Calendar Embed -->
+    <div class="embed-panel">
+      <div class="embed-panel__header">
+        <div class="embed-panel__title">
+          <span class="live-dot"></span>
+          Live Availability — a@contributeai.org
+        </div>
+        <div class="embed-panel__source">
+          <svg width="14" height="14" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+          Google Calendar
+        </div>
+      </div>
+
+      <div class="embed-wrap" id="embedWrap">
+
+        <!-- ── Calendly inline widget ──────────────────────────────────────
+             HOW TO CONNECT YOUR GOOGLE CALENDAR (5 minutes, free):
+
+             1. Go to https://calendly.com → Sign up free
+             2. Settings → Calendar Connection → Connect Google Calendar
+                → sign in as a@contributeai.org → Allow
+             3. New Event Type → "ContributeAI Demo" → 45 min
+             4. Add questions: Company, Phone, "What to see in demo?"
+             5. Copy your event URL e.g. https://calendly.com/contributeai/demo
+             6. Replace PASTE_CALENDLY_URL below with that URL
+             7. Save → the calendar appears live here ✅
+
+             Calendly reads a@contributeai.org's Google Calendar for busy
+             times and writes new bookings back into it automatically.
+             Confirmation emails are sent to both parties by Calendly.
+        ──────────────────────────────────────────────────────────────────── -->
+
+        <div id="calendlyWidget"
+             class="calendly-inline-widget"
+             data-url="https://calendly.com/a-contributeai"
+             style="min-width:100%;height:750px;">
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT: Info -->
+    <div class="side-stack">
+
+      <!-- Auto email notice -->
+      <div class="email-notice">
+        <div class="email-notice__icon">✉️</div>
+        <div>
+          <h4>Confirmation Email Sent Automatically</h4>
+          <p>After you book, Google Calendar sends a confirmation to <strong>your email</strong> and notifies <strong>a@contributeai.org</strong> — no extra setup needed.</p>
+        </div>
+      </div>
+
+      <!-- Integrations -->
+      <div class="info-panel">
+        <div class="info-panel__header">
+          <span style="font-size:1rem;">🔗</span>
+          <span class="info-panel__title">Works With</span>
+        </div>
+        <div class="info-panel__body">
+          <div class="int-row">
+            <div class="int-pill int-pill--google">
+              <svg width="12" height="12" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+              Google Calendar
+            </div>
+            <div class="int-pill int-pill--meet">📹 Google Meet</div>
+            <div class="int-pill int-pill--outlook">
+              <svg width="12" height="12" viewBox="0 0 23 23"><rect x="1" y="1" width="10" height="10" fill="#F25022"/><rect x="12" y="1" width="10" height="10" fill="#7FBA00"/><rect x="1" y="12" width="10" height="10" fill="#00A4EF"/><rect x="12" y="12" width="10" height="10" fill="#FFB900"/></svg>
+              Outlook
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- What happens -->
+      <div class="info-panel">
+        <div class="info-panel__header">
+          <span style="font-size:1rem;">⚡</span>
+          <span class="info-panel__title">What happens after you book</span>
+        </div>
+        <div class="info-panel__body">
+          <div class="flow-list">
+            <div class="flow-row">
+              <div class="flow-num">1</div>
+              <p><strong>Instant confirmation email</strong>Sent to your inbox with date, time, and Google Meet link.</p>
+            </div>
+            <div class="flow-row">
+              <div class="flow-num">2</div>
+              <p><strong>Calendar invite</strong>Added to your Google or Outlook calendar automatically.</p>
+            </div>
+            <div class="flow-row">
+              <div class="flow-num">3</div>
+              <p><strong>Reminder 24 hrs before</strong>Google sends an email reminder so you don't miss it.</p>
+            </div>
+            <div class="flow-row">
+              <div class="flow-num">4</div>
+              <p><strong>Join via Google Meet</strong>Click the link in your calendar at the scheduled time.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- What to expect -->
+      <div class="info-panel">
+        <div class="info-panel__header">
+          <span style="font-size:1rem;">🎯</span>
+          <span class="info-panel__title">What we cover in 45 min</span>
+        </div>
+        <div class="info-panel__body">
+          <div class="expect-list">
+            <div class="expect-item">
+              <div class="expect-icon expect-icon--teal">🤖</div>
+              <div class="expect-text">
+                <h4>Live Virtual Agent Demo</h4>
+                <p>Watch a real CCAI CX agent handle a full call — using your industry as the scenario.</p>
+              </div>
+            </div>
+            <div class="expect-item">
+              <div class="expect-icon expect-icon--orange">📅</div>
+              <div class="expect-text">
+                <h4>Calendar Booking in Real Time</h4>
+                <p>See the AI book a Google or Outlook appointment live, while on the call.</p>
+              </div>
+            </div>
+            <div class="expect-item">
+              <div class="expect-icon expect-icon--blue">📊</div>
+              <div class="expect-text">
+                <h4>Your ROI Estimate</h4>
+                <p>We calculate your cost savings based on call volume and agent headcount.</p>
+              </div>
+            </div>
+            <div class="expect-item">
+              <div class="expect-icon expect-icon--amber">❓</div>
+              <div class="expect-text">
+                <h4>Q&A</h4>
+                <p>Open questions — pricing, deployment timeline, custom integrations.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA box -->
+      <div class="cta-box">
+        <h4>Questions before booking?</h4>
+        <p>Email us directly and we'll get back within a few hours.</p>
+        <a href="mailto:a@contributeai.org" class="btn-cta">✉️ a@contributeai.org</a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  const CALENDLY_URL = document.getElementById('calendlyWidget')?.dataset.url || '';
+
+  if (CALENDLY_URL && CALENDLY_URL !== 'PASTE_CALENDLY_URL') {
+    // Load Calendly widget script
+    const s = document.createElement('script');
+    s.src  = 'https://assets.calendly.com/assets/external/widget.js';
+    s.async = true;
+    document.head.appendChild(s);
+
+    // Load Calendly CSS
+    const l = document.createElement('link');
+    l.rel  = 'stylesheet';
+    l.href = 'https://assets.calendly.com/assets/external/widget.css';
+    document.head.appendChild(l);
+  } else {
+    // Show setup instructions until Calendly URL is added
+    document.getElementById('embedWrap').innerHTML = `
+      <div class="setup-placeholder">
+        <div class="setup-placeholder__icon">📅</div>
+        <h3>Connect Your Google Calendar</h3>
+        <p>Set up Calendly (free) to embed live booking directly on this page — reads <strong>a@contributeai.org</strong>'s availability in real time.</p>
+        <div class="setup-steps">
+          <div class="setup-step">
+            <div class="setup-num">1</div>
+            <p>Go to <strong>calendly.com</strong> → Sign up free with <span class="code-chip">a@contributeai.org</span></p>
+          </div>
+          <div class="setup-step">
+            <div class="setup-num">2</div>
+            <p><strong>Settings → Calendar Connections</strong> → Connect Google Calendar → Allow</p>
+          </div>
+          <div class="setup-step">
+            <div class="setup-num">3</div>
+            <p>Create a new <strong>45-min event type</strong> → add questions: Company, Phone, Notes</p>
+          </div>
+          <div class="setup-step">
+            <div class="setup-num">4</div>
+            <p>Copy your event URL: <span class="code-chip">https://calendly.com/contributeai/demo</span></p>
+          </div>
+          <div class="setup-step">
+            <div class="setup-num">5</div>
+            <p>In <span class="code-chip">book-demo.html</span> replace <span class="code-chip">PASTE_CALENDLY_URL</span> with your URL → save &amp; reload ✅</p>
+          </div>
+        </div>
+      </div>`;
+  }
+</script>
+
+</body>
+</html>

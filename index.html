@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ContributeAI — AI Virtual Agents & QR Intelligence Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --orange:    #FF451A;
+      --orange-h:  #e03610;
+      --navy:      #152550;
+      --navy-d:    #0D1630;
+      --teal:      #18CAA8;
+      --amber:     #F7AD00;
+      --google-b:  #4285F4;
+      --google-g:  #34A853;
+      --google-y:  #FBBC04;
+      --google-r:  #EA4335;
+      --ms-blue:   #0078D4;
+      --white:     #ffffff;
+      --off-white: #F9F8F5;
+      --gray-lt:   #f1f0ed;
+      --gray:      #6b7280;
+      --gray-dk:   #374151;
+      --radius:    1rem;
+      --shadow:    0 4px 24px rgba(21,37,80,.12);
+      --shadow-lg: 0 8px 48px rgba(21,37,80,.18);
+      --trans:     .25s ease;
+      --max:       1440px;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Roboto', -apple-system, 'Segoe UI', sans-serif; font-size: 16px; color: var(--navy-d); background: var(--white); line-height: 1.6; overflow-x: hidden; }
+    img  { max-width: 100%; display: block; }
+    a    { text-decoration: none; color: inherit; }
+    ul   { list-style: none; }
+
+    /* ── Layout ── */
+    .container  { max-width: var(--max); margin: 0 auto; padding: 0 2rem; }
+    .section    { padding: 6rem 0; }
+    .section--alt    { background: var(--off-white); }
+    .section--dark   { background: var(--navy); color: var(--white); }
+    .section--navy-d { background: var(--navy-d); color: var(--white); }
+    .section--gradient { background: linear-gradient(135deg, var(--navy-d) 0%, #1a2f5e 100%); color: var(--white); }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; }
+    .text-center { text-align: center; }
+
+    /* ── Typography ── */
+    .label { display: inline-block; font-size: .75rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--teal); margin-bottom: .75rem; }
+    .label--white { color: rgba(255,255,255,.7); }
+    .label--orange { color: var(--orange); }
+    h1,h2,h3,h4 { font-weight: 700; line-height: 1.15; }
+    h1 { font-size: clamp(2.4rem, 4.5vw, 3.75rem); }
+    h2 { font-size: clamp(1.875rem, 3vw, 2.75rem); }
+    h3 { font-size: 1.4rem; }
+    h4 { font-size: 1.0625rem; }
+    p.lead { font-size: 1.125rem; color: var(--gray-dk); line-height: 1.75; }
+    p.lead--white { color: rgba(255,255,255,.75); }
+
+    /* ── Buttons ── */
+    .btn { display: inline-flex; align-items: center; gap: .5rem; padding: 18px 32px; border-radius: var(--radius); font-size: 1rem; font-weight: 600; cursor: pointer; border: 2px solid transparent; transition: all var(--trans); }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary { background: var(--orange); color: var(--white); box-shadow: 0 4px 20px rgba(255,69,26,.35); }
+    .btn-primary:hover { background: var(--orange-h); box-shadow: 0 6px 28px rgba(255,69,26,.45); }
+    .btn-outline { background: transparent; color: var(--white); border-color: rgba(255,255,255,.45); }
+    .btn-outline:hover { background: rgba(255,255,255,.1); border-color: var(--white); }
+    .btn-outline--navy { background: transparent; color: var(--navy); border-color: var(--navy); }
+    .btn-outline--navy:hover { background: var(--navy); color: var(--white); }
+    .btn-teal { background: var(--teal); color: var(--navy-d); font-weight: 700; box-shadow: 0 4px 20px rgba(24,202,168,.3); }
+    .btn-teal:hover { background: #13b596; }
+    .btn-google { background: var(--white); color: var(--gray-dk); border-color: #dadce0; box-shadow: 0 1px 8px rgba(0,0,0,.1); }
+    .btn-google:hover { box-shadow: 0 2px 16px rgba(0,0,0,.15); border-color: #bbb; }
+    .btn-lg { padding: 20px 38px; font-size: 1.0625rem; }
+    .btn-sm { padding: 11px 22px; font-size: .875rem; }
+    .btn-group { display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; }
+
+    /* ── NAV ── */
+    .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: var(--white); box-shadow: 0 1px 0 rgba(21,37,80,.07); transition: box-shadow var(--trans); }
+    .nav.scrolled { box-shadow: var(--shadow); }
+    .nav__inner { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+    .nav__logo { display: flex; align-items: center; gap: .75rem; font-weight: 900; font-size: 1.2rem; color: var(--navy); }
+    .nav__logo-icon { width: 38px; height: 38px; background: var(--orange); border-radius: .625rem; display: flex; align-items: center; justify-content: center; }
+    .nav__logo-icon svg { color: #fff; }
+    .nav__logo em { color: var(--orange); font-style: normal; }
+    .nav__menu { display: flex; align-items: center; gap: 1.75rem; }
+    .nav__item { position: relative; }
+    .nav__link { font-size: .9375rem; font-weight: 500; color: var(--gray-dk); padding: .5rem 0; cursor: pointer; display: flex; align-items: center; gap: .3rem; transition: color var(--trans); }
+    .nav__link:hover, .nav__link.active { color: var(--orange); }
+    .chevron { width: 14px; height: 14px; transition: transform var(--trans); }
+    .nav__item:hover .chevron { transform: rotate(180deg); }
+    .nav__dropdown { position: absolute; top: calc(100% + 1rem); left: -1.5rem; background: var(--white); border-radius: 1rem; box-shadow: var(--shadow-lg); padding: 1.25rem; min-width: 260px; opacity: 0; pointer-events: none; transform: translateY(-8px); transition: opacity var(--trans), transform var(--trans); }
+    .nav__item:hover .nav__dropdown { opacity: 1; pointer-events: all; transform: translateY(0); }
+    .nav__dd-item { display: flex; align-items: flex-start; gap: .875rem; padding: .75rem 1rem; border-radius: .625rem; cursor: pointer; transition: background var(--trans); }
+    .nav__dd-item:hover { background: var(--off-white); }
+    .nav__dd-icon { width: 36px; height: 36px; border-radius: .5rem; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+    .nav__dd-icon--orange { background: rgba(255,69,26,.1); }
+    .nav__dd-icon--teal   { background: rgba(24,202,168,.1); }
+    .nav__dd-icon--blue   { background: rgba(66,133,244,.1); }
+    .nav__dd-icon--amber  { background: rgba(247,173,0,.1); }
+    .nav__dd-text strong  { display: block; font-size: .9rem; color: var(--navy); font-weight: 600; }
+    .nav__dd-text span    { font-size: .8rem; color: var(--gray); }
+    .nav__actions { display: flex; align-items: center; gap: 1rem; }
+    .nav__signin  { font-size: .9375rem; font-weight: 600; color: var(--navy); cursor: pointer; transition: color var(--trans); }
+    .nav__signin:hover { color: var(--orange); }
+    .nav__hamburger { display: none; cursor: pointer; background: none; border: none; }
+    .mobile-menu { display: none; position: fixed; top: 72px; left: 0; right: 0; background: var(--white); box-shadow: var(--shadow-lg); padding: 1.5rem 2rem 2rem; z-index: 999; flex-direction: column; gap: .25rem; }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu .nav__link { padding: .875rem 0; border-bottom: 1px solid var(--gray-lt); }
+    .mobile-menu .btn { margin-top: 1rem; align-self: flex-start; }
+
+    /* ── PRODUCT SWITCHER ── */
+    .product-tabs { display: flex; justify-content: center; gap: .5rem; margin-bottom: 3rem; }
+    .product-tab { padding: .625rem 1.5rem; border-radius: 100px; font-size: .9375rem; font-weight: 600; cursor: pointer; border: 2px solid var(--gray-lt); color: var(--gray); transition: all var(--trans); background: var(--white); }
+    .product-tab.active { background: var(--navy); color: var(--white); border-color: var(--navy); }
+    .product-tab:hover:not(.active) { border-color: var(--navy); color: var(--navy); }
+
+    /* ── HERO ── */
+    .hero { background: var(--navy-d); padding: 9rem 0 7rem; position: relative; overflow: hidden; }
+    .hero::before { content: ''; position: absolute; top: -20%; right: -8%; width: 800px; height: 800px; background: radial-gradient(circle, rgba(255,69,26,.15) 0%, transparent 65%); pointer-events: none; }
+    .hero::after  { content: ''; position: absolute; bottom: -25%; left: -5%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(24,202,168,.1) 0%, transparent 65%); pointer-events: none; }
+    .hero__grid   { display: grid; grid-template-columns: 1.1fr .9fr; gap: 4rem; align-items: center; position: relative; z-index: 1; }
+    .hero__badge  { display: inline-flex; align-items: center; gap: .5rem; background: rgba(24,202,168,.15); border: 1px solid rgba(24,202,168,.3); border-radius: 100px; padding: .375rem 1rem; font-size: .8125rem; font-weight: 600; color: var(--teal); margin-bottom: 1.5rem; }
+    .hero__badge::before { content: ''; width: 6px; height: 6px; background: var(--teal); border-radius: 50%; }
+    .hero h1 { color: var(--white); margin-bottom: 1.5rem; }
+    .hero h1 span { color: var(--orange); }
+    .hero .lead  { color: rgba(255,255,255,.72); margin-bottom: 2rem; }
+    .hero__powered { display: flex; align-items: center; gap: 1rem; margin-bottom: 2.5rem; flex-wrap: wrap; }
+    .hero__powered span { font-size: .8125rem; color: rgba(255,255,255,.45); font-weight: 500; }
+    .powered-badge { display: flex; align-items: center; gap: .4rem; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.12); border-radius: .5rem; padding: .35rem .75rem; font-size: .8125rem; font-weight: 600; color: rgba(255,255,255,.8); }
+    .powered-badge .dot { width: 8px; height: 8px; border-radius: 50%; }
+    .dot-google { background: var(--google-b); }
+    .dot-vertex { background: #a142f4; }
+    .dot-ccai   { background: var(--google-g); }
+    .hero__meta { display: flex; align-items: center; gap: 1.5rem; margin-top: 2.5rem; padding-top: 2.5rem; border-top: 1px solid rgba(255,255,255,.1); }
+    .hero__stat strong { display: block; font-size: 1.75rem; font-weight: 900; color: var(--white); }
+    .hero__stat span   { font-size: .8125rem; color: rgba(255,255,255,.5); }
+    .hero__div { width: 1px; height: 40px; background: rgba(255,255,255,.12); }
+
+    /* ── AGENT DASHBOARD VISUAL ── */
+    .agent-dash { background: #111827; border-radius: 1.5rem; overflow: hidden; box-shadow: 0 32px 64px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.07); }
+    .dash-bar   { background: #1f2937; padding: .75rem 1.25rem; display: flex; align-items: center; gap: .5rem; border-bottom: 1px solid rgba(255,255,255,.06); }
+    .dash-dot   { width: 10px; height: 10px; border-radius: 50%; }
+    .dash-dot--r { background: #ff5f57; }
+    .dash-dot--y { background: #febc2e; }
+    .dash-dot--g { background: #28c840; }
+    .dash-title  { margin-left: .5rem; font-size: .8125rem; font-weight: 600; color: rgba(255,255,255,.55); }
+    .dash-body   { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
+    .dash-row    { display: flex; gap: 1rem; }
+    .dash-metric { flex: 1; background: #1f2937; border-radius: .875rem; padding: 1rem; }
+    .dash-metric__val  { font-size: 1.625rem; font-weight: 900; color: var(--white); line-height: 1; }
+    .dash-metric__val--teal   { color: var(--teal); }
+    .dash-metric__val--orange { color: var(--orange); }
+    .dash-metric__val--amber  { color: var(--amber); }
+    .dash-metric__label { font-size: .6875rem; color: rgba(255,255,255,.45); margin-top: .25rem; font-weight: 500; }
+    .dash-metric__trend { font-size: .6875rem; font-weight: 700; margin-top: .375rem; }
+    .dash-metric__trend--up   { color: var(--teal); }
+    .dash-metric__trend--down { color: var(--orange); }
+    .dash-convo  { background: #1f2937; border-radius: .875rem; padding: 1rem; display: flex; flex-direction: column; gap: .625rem; }
+    .dash-convo__header { display: flex; align-items: center; justify-content: space-between; margin-bottom: .25rem; }
+    .dash-convo__title  { font-size: .8125rem; font-weight: 700; color: rgba(255,255,255,.75); }
+    .dash-live   { display: flex; align-items: center; gap: .375rem; font-size: .6875rem; font-weight: 700; color: var(--teal); }
+    .dash-live::before { content: ''; width: 6px; height: 6px; background: var(--teal); border-radius: 50%; animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .4; } }
+    .msg { display: flex; gap: .625rem; align-items: flex-end; }
+    .msg--agent { flex-direction: row; }
+    .msg--user  { flex-direction: row-reverse; }
+    .msg__avatar { width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: .6rem; font-weight: 800; }
+    .msg__avatar--agent { background: linear-gradient(135deg, var(--teal), #0e9b7e); color: #fff; }
+    .msg__avatar--user  { background: var(--gray-dk); color: rgba(255,255,255,.7); }
+    .msg__bubble { max-width: 75%; padding: .5rem .875rem; border-radius: .875rem; font-size: .8125rem; line-height: 1.5; }
+    .msg__bubble--agent { background: rgba(24,202,168,.15); color: rgba(255,255,255,.85); border-bottom-left-radius: .25rem; }
+    .msg__bubble--user  { background: #374151; color: rgba(255,255,255,.75); border-bottom-right-radius: .25rem; }
+    .dash-cal    { background: #1f2937; border-radius: .875rem; padding: 1rem; }
+    .dash-cal__header { display: flex; align-items: center; gap: .5rem; margin-bottom: .75rem; }
+    .dash-cal__title  { font-size: .8125rem; font-weight: 700; color: rgba(255,255,255,.75); }
+    .cal-integration { display: flex; gap: .5rem; margin-left: auto; }
+    .cal-chip { font-size: .625rem; font-weight: 700; padding: .2rem .5rem; border-radius: .25rem; }
+    .cal-chip--gmail { background: rgba(234,67,53,.2); color: #ff6b5b; }
+    .cal-chip--outlook { background: rgba(0,120,212,.2); color: #5ba4ff; }
+    .cal-event { display: flex; align-items: center; gap: .625rem; padding: .5rem; background: rgba(255,255,255,.04); border-radius: .5rem; margin-bottom: .375rem; }
+    .cal-event__dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .cal-event__dot--teal   { background: var(--teal); }
+    .cal-event__dot--orange { background: var(--orange); }
+    .cal-event__dot--amber  { background: var(--amber); }
+    .cal-event__body strong { display: block; font-size: .75rem; color: rgba(255,255,255,.8); }
+    .cal-event__body span   { font-size: .6875rem; color: rgba(255,255,255,.4); }
+    .cal-event__badge { margin-left: auto; font-size: .625rem; font-weight: 700; padding: .2rem .5rem; background: rgba(24,202,168,.15); color: var(--teal); border-radius: .25rem; white-space: nowrap; }
+
+    /* hero float cards */
+    .hero__float { position: absolute; background: var(--white); border-radius: 1rem; padding: .875rem 1.125rem; box-shadow: var(--shadow-lg); display: flex; align-items: center; gap: .75rem; z-index: 2; animation: floatY 3s ease-in-out infinite alternate; }
+    @keyframes floatY { from { transform: translateY(0); } to { transform: translateY(-10px); } }
+    .hero__float--tl { top: 5%; left: -4%; animation-delay: -.4s; }
+    .hero__float--br { bottom: 8%; right: -4%; animation-delay: -1.6s; }
+    .float-icon  { width: 38px; height: 38px; border-radius: .625rem; display: flex; align-items: center; justify-content: center; font-size: 1.125rem; }
+    .float-icon--teal   { background: rgba(24,202,168,.15); }
+    .float-icon--green  { background: rgba(52,168,83,.15); }
+    .float-text strong  { display: block; font-size: .875rem; color: var(--navy); font-weight: 700; }
+    .float-text span    { font-size: .75rem; color: var(--gray); }
+
+    /* ── LOGOS ── */
+    .logos { padding: 3.5rem 0; border-bottom: 1px solid var(--gray-lt); }
+    .logos__label { font-size: .875rem; color: var(--gray); text-align: center; margin-bottom: 2rem; font-weight: 500; }
+    .logos__track { display: flex; align-items: center; justify-content: center; gap: 3rem; flex-wrap: wrap; }
+    .logo-item    { font-size: .8125rem; font-weight: 700; color: #c5c9d1; letter-spacing: .07em; text-transform: uppercase; transition: color var(--trans); }
+    .logo-item:hover { color: var(--gray); }
+
+    /* ── CCAI SECTION ── */
+    .ccai-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; margin-top: 3.5rem; }
+    .ccai-card  { background: var(--white); border: 1px solid var(--gray-lt); border-radius: 1.5rem; padding: 2.25rem 1.875rem; transition: box-shadow var(--trans), transform var(--trans), border-color var(--trans); }
+    .ccai-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-4px); border-color: transparent; }
+    .ccai-card__icon  { width: 56px; height: 56px; border-radius: 1rem; display: flex; align-items: center; justify-content: center; margin-bottom: 1.25rem; }
+    .ccai-card__icon--blue   { background: rgba(66,133,244,.1); }
+    .ccai-card__icon--purple { background: rgba(161,66,244,.1); }
+    .ccai-card__icon--green  { background: rgba(52,168,83,.1); }
+    .ccai-card h3  { margin-bottom: .625rem; font-size: 1.2rem; }
+    .ccai-card p   { color: var(--gray); font-size: .9375rem; line-height: 1.65; }
+    .ccai-card__tag { display: inline-block; margin-top: 1rem; font-size: .75rem; font-weight: 700; padding: .25rem .75rem; border-radius: 100px; }
+    .tag--ccai   { background: rgba(66,133,244,.1);  color: var(--google-b); }
+    .tag--vertex { background: rgba(161,66,244,.1);  color: #a142f4; }
+    .tag--nlu    { background: rgba(52,168,83,.1);   color: var(--google-g); }
+
+    /* ── VIRTUAL AGENT FLOW ── */
+    .flow-intro { text-align: center; max-width: 600px; margin: 0 auto 4rem; }
+    .flow-steps { display: flex; align-items: stretch; gap: 0; position: relative; margin-bottom: 3rem; }
+    .flow-step  { flex: 1; padding: 2rem 1.5rem; position: relative; }
+    .flow-step::after { content: '▶'; position: absolute; right: -12px; top: 50%; transform: translateY(-50%); color: var(--teal); font-size: 1.25rem; z-index: 1; }
+    .flow-step:last-child::after { display: none; }
+    .flow-step__num { width: 36px; height: 36px; background: var(--orange); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: .875rem; margin-bottom: 1rem; }
+    .flow-step__icon { font-size: 1.75rem; margin-bottom: .75rem; }
+    .flow-step h4 { font-size: 1rem; margin-bottom: .5rem; color: var(--white); }
+    .flow-step p  { font-size: .875rem; color: rgba(255,255,255,.6); line-height: 1.6; }
+    .flow-step__tag { display: inline-block; margin-top: .75rem; font-size: .6875rem; font-weight: 700; padding: .2rem .6rem; border-radius: 100px; background: rgba(255,255,255,.1); color: rgba(255,255,255,.7); }
+    .flow-step--active { background: rgba(255,255,255,.05); border-radius: 1rem; }
+
+    /* ── CALENDAR INTEGRATION ── */
+    .cal-section__intro { max-width: 560px; margin-bottom: 3rem; }
+    .integrations-grid  { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .integration-card   { border-radius: 1.5rem; padding: 2.25rem; border: 2px solid; transition: box-shadow var(--trans), transform var(--trans); }
+    .integration-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-4px); }
+    .integration-card--gmail   { background: #fff; border-color: rgba(234,67,53,.2); }
+    .integration-card--outlook { background: #fff; border-color: rgba(0,120,212,.2); }
+    .integration-logo   { display: flex; align-items: center; gap: .875rem; margin-bottom: 1.5rem; }
+    .integration-logo__icon { width: 48px; height: 48px; border-radius: .875rem; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+    .integration-logo__icon--gmail   { background: rgba(234,67,53,.1); }
+    .integration-logo__icon--outlook { background: rgba(0,120,212,.1); }
+    .integration-logo__name  { font-size: 1.25rem; font-weight: 800; color: var(--navy); }
+    .integration-logo__badge { font-size: .75rem; font-weight: 600; color: var(--gray); }
+    .integration-features    { display: flex; flex-direction: column; gap: .75rem; margin-bottom: 1.75rem; }
+    .integration-feature     { display: flex; align-items: center; gap: .75rem; font-size: .9375rem; color: var(--gray-dk); }
+    .check-icon { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .6875rem; font-weight: 800; flex-shrink: 0; color: #fff; }
+    .check-icon--gmail   { background: var(--google-r); }
+    .check-icon--outlook { background: var(--ms-blue); }
+    .integration-flow   { background: var(--off-white); border-radius: 1rem; padding: 1.25rem; }
+    .integration-flow p { font-size: .875rem; color: var(--gray-dk); line-height: 1.65; }
+    .integration-flow strong { color: var(--navy); }
+
+    /* ── CAL BOOKING VISUAL ── */
+    .cal-visual { background: var(--navy); border-radius: 1.5rem; padding: 2rem; display: flex; flex-direction: column; gap: 1.25rem; }
+    .cal-visual__header { display: flex; align-items: center; justify-content: space-between; }
+    .cal-visual__title  { font-size: 1rem; font-weight: 700; color: #fff; }
+    .cal-integrations-row { display: flex; gap: .5rem; }
+    .int-pill { display: flex; align-items: center; gap: .375rem; background: rgba(255,255,255,.08); border-radius: 100px; padding: .25rem .75rem; font-size: .75rem; font-weight: 700; }
+    .int-pill--gmail   { color: #ff6b5b; border: 1px solid rgba(234,67,53,.3); }
+    .int-pill--outlook { color: #5ba4ff; border: 1px solid rgba(0,120,212,.3); }
+    .cal-booking-flow  { display: flex; flex-direction: column; gap: .625rem; }
+    .booking-step      { display: flex; align-items: flex-start; gap: .875rem; }
+    .booking-step__icon { width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: .875rem; }
+    .booking-step__body h5  { font-size: .875rem; font-weight: 700; color: #fff; margin-bottom: .125rem; }
+    .booking-step__body p   { font-size: .8125rem; color: rgba(255,255,255,.55); }
+    .booking-connector { width: 1px; height: 20px; background: rgba(255,255,255,.15); margin-left: 16px; }
+    .booked-event      { background: rgba(24,202,168,.15); border: 1px solid rgba(24,202,168,.25); border-radius: .875rem; padding: 1rem 1.25rem; display: flex; align-items: center; gap: 1rem; }
+    .booked-event__icon { font-size: 1.5rem; }
+    .booked-event__body strong { display: block; font-size: .9375rem; font-weight: 700; color: var(--teal); }
+    .booked-event__body span   { font-size: .8125rem; color: rgba(255,255,255,.55); }
+    .booked-event__check { margin-left: auto; width: 28px; height: 28px; background: var(--teal); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .75rem; font-weight: 900; color: #fff; }
+
+    /* ── SAVINGS STATS ── */
+    .savings__grid { display: grid; grid-template-columns: repeat(4,1fr); }
+    .saving-item   { padding: 3rem 2rem; border-right: 1px solid rgba(255,255,255,.1); text-align: center; }
+    .saving-item:last-child { border-right: none; }
+    .saving-item__num { font-size: 3.25rem; font-weight: 900; line-height: 1; margin-bottom: .5rem; }
+    .saving-item__num--teal   { color: var(--teal); }
+    .saving-item__num--orange { color: var(--orange); }
+    .saving-item__num--amber  { color: var(--amber); }
+    .saving-item__num--white  { color: var(--white); }
+    .saving-item strong { display: block; font-size: 1.0625rem; font-weight: 700; color: #fff; margin-bottom: .25rem; }
+    .saving-item span   { font-size: .875rem; color: rgba(255,255,255,.5); line-height: 1.5; }
+
+    /* ── FEATURES (QR) ── */
+    .features-intro { text-align: center; max-width: 600px; margin: 0 auto 3.5rem; }
+    .feature-card   { background: var(--white); border: 1px solid var(--gray-lt); border-radius: 1.5rem; padding: 2.25rem 1.875rem; transition: box-shadow var(--trans), transform var(--trans), border-color var(--trans); }
+    .feature-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-4px); border-color: transparent; }
+    .feature-card__icon { width: 52px; height: 52px; border-radius: .875rem; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 1.25rem; }
+    .feature-card__icon--orange { background: rgba(255,69,26,.1); }
+    .feature-card__icon--teal   { background: rgba(24,202,168,.1); }
+    .feature-card__icon--amber  { background: rgba(247,173,0,.1); }
+    .feature-card__icon--navy   { background: rgba(21,37,80,.07); }
+    .feature-card h3 { margin-bottom: .625rem; font-size: 1.15rem; }
+    .feature-card p  { color: var(--gray); font-size: .9375rem; line-height: 1.65; }
+
+    /* ── TESTIMONIALS ── */
+    .testi-intro { text-align: center; max-width: 540px; margin: 0 auto 3.5rem; }
+    .testi-card  { background: var(--white); border: 1px solid var(--gray-lt); border-radius: 1.5rem; padding: 2.25rem; display: flex; flex-direction: column; gap: 1.25rem; transition: box-shadow var(--trans), transform var(--trans); }
+    .testi-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-4px); }
+    .testi-stars { color: var(--amber); letter-spacing: 2px; }
+    .testi-quote { font-size: .9375rem; color: var(--gray-dk); line-height: 1.7; flex: 1; }
+    .testi-author { display: flex; align-items: center; gap: 1rem; padding-top: 1.25rem; border-top: 1px solid var(--gray-lt); }
+    .testi-avatar { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1rem; color: #fff; flex-shrink: 0; }
+    .testi-info strong { display: block; font-size: .9375rem; color: var(--navy); }
+    .testi-info span   { font-size: .8125rem; color: var(--gray); }
+
+    /* ── CTA BAND ── */
+    .cta-band { background: linear-gradient(135deg, var(--orange) 0%, #c73310 100%); padding: 5rem 0; position: relative; overflow: hidden; }
+    .cta-band::before { content: ''; position: absolute; top: -50%; right: -8%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(255,255,255,.12) 0%, transparent 65%); pointer-events: none; }
+    .cta-band__inner { display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap; position: relative; z-index: 1; }
+    .cta-band h2    { color: var(--white); max-width: 500px; }
+    .cta-band .lead { color: rgba(255,255,255,.8); margin-top: .5rem; }
+
+    /* ── PRICING ── */
+    .pricing-intro { text-align: center; max-width: 540px; margin: 0 auto 3.5rem; }
+    .pricing-grid  { display: grid; grid-template-columns: repeat(3,1fr); gap: 2rem; align-items: start; }
+    .pricing-card  { background: var(--white); border: 2px solid var(--gray-lt); border-radius: 1.5rem; padding: 2.25rem 1.875rem; transition: box-shadow var(--trans); }
+    .pricing-card:hover { box-shadow: var(--shadow-lg); }
+    .pricing-card.featured { border-color: var(--orange); position: relative; }
+    .pricing-card.featured::before { content: 'Most Popular'; position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: var(--orange); color: #fff; font-size: .75rem; font-weight: 700; padding: .25rem 1rem; border-radius: 100px; white-space: nowrap; }
+    .pricing-name  { font-size: 1.0625rem; font-weight: 700; color: var(--navy); margin-bottom: .5rem; }
+    .pricing-price { font-size: 3rem; font-weight: 900; color: var(--navy-d); line-height: 1; margin: 1rem 0 .25rem; }
+    .pricing-price sup { font-size: 1.25rem; font-weight: 700; vertical-align: super; }
+    .pricing-period { font-size: .875rem; color: var(--gray); margin-bottom: 1.25rem; }
+    .pricing-desc   { font-size: .9375rem; color: var(--gray); margin-bottom: 1.75rem; line-height: 1.6; }
+    .pricing-features { display: flex; flex-direction: column; gap: .75rem; margin-bottom: 1.75rem; }
+    .pf { display: flex; align-items: center; gap: .75rem; font-size: .9375rem; color: var(--gray-dk); }
+    .pf::before { content: '✓'; width: 20px; height: 20px; background: rgba(24,202,168,.15); color: var(--teal); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .75rem; font-weight: 800; flex-shrink: 0; }
+
+    /* ── SECURITY ── */
+    .security-badges { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+    .sec-badge { background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); border-radius: 1rem; padding: 1.5rem; text-align: center; transition: background var(--trans); }
+    .sec-badge:hover { background: rgba(255,255,255,.1); }
+    .sec-badge__icon { font-size: 2rem; margin-bottom: .75rem; }
+    .sec-badge__name { font-size: .875rem; font-weight: 700; color: #fff; margin-bottom: .25rem; }
+    .sec-badge__desc { font-size: .75rem; color: rgba(255,255,255,.5); line-height: 1.5; }
+    .security-list   { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2.5rem; }
+    .sec-item  { display: flex; gap: 1rem; align-items: flex-start; }
+    .sec-item__icon { width: 36px; height: 36px; background: rgba(255,69,26,.15); color: var(--orange); border-radius: .625rem; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: .875rem; }
+    .sec-item h4    { font-size: 1rem; color: #fff; margin-bottom: .15rem; }
+    .sec-item p     { font-size: .875rem; color: rgba(255,255,255,.55); }
+
+    /* ── DOWNLOAD ── */
+    .download { background: var(--navy-d); padding: 7rem 0; position: relative; overflow: hidden; }
+    .download::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 20% 50%, rgba(255,69,26,.12) 0%, transparent 60%), radial-gradient(ellipse at 80% 50%, rgba(24,202,168,.08) 0%, transparent 60%); pointer-events: none; }
+    .download__inner { text-align: center; position: relative; z-index: 1; }
+    .download h2    { color: var(--white); margin-bottom: 1rem; }
+    .download .lead { max-width: 540px; margin: 0 auto 2.5rem; }
+    .store-btns     { display: flex; align-items: center; justify-content: center; gap: 1.25rem; flex-wrap: wrap; }
+    .store-btn { display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.18); border-radius: 1rem; padding: 1rem 1.75rem; cursor: pointer; transition: all var(--trans); }
+    .store-btn:hover { background: rgba(255,255,255,.13); border-color: rgba(255,255,255,.38); transform: translateY(-2px); }
+    .store-btn__icon { font-size: 2rem; }
+    .store-btn__text span    { display: block; font-size: .6875rem; color: rgba(255,255,255,.5); }
+    .store-btn__text strong  { display: block; font-size: 1.0625rem; color: #fff; font-weight: 700; }
+
+    /* ── FOOTER ── */
+    .footer { background: var(--navy-d); border-top: 1px solid rgba(255,255,255,.06); padding: 5rem 0 0; }
+    .footer__grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 3rem; padding-bottom: 4rem; }
+    .footer__brand p { font-size: .9375rem; color: rgba(255,255,255,.45); margin: 1rem 0 2rem; line-height: 1.75; max-width: 280px; }
+    .footer__social { display: flex; gap: .75rem; }
+    .social-link { width: 36px; height: 36px; background: rgba(255,255,255,.07); border-radius: .5rem; display: flex; align-items: center; justify-content: center; font-size: .875rem; color: rgba(255,255,255,.55); transition: all var(--trans); font-weight: 700; }
+    .social-link:hover { background: var(--orange); color: #fff; }
+    .footer__col h5 { font-size: .8125rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.3); margin-bottom: 1.25rem; }
+    .footer__links  { display: flex; flex-direction: column; gap: .75rem; }
+    .footer__link   { font-size: .9375rem; color: rgba(255,255,255,.55); transition: color var(--trans); cursor: pointer; }
+    .footer__link:hover { color: var(--white); }
+    .footer__bottom { display: flex; align-items: center; justify-content: space-between; padding: 2rem 0; border-top: 1px solid rgba(255,255,255,.06); flex-wrap: wrap; gap: 1rem; }
+    .footer__bottom p { font-size: .875rem; color: rgba(255,255,255,.3); }
+    .footer__legal  { display: flex; gap: 2rem; }
+    .footer__legal a { font-size: .875rem; color: rgba(255,255,255,.3); transition: color var(--trans); }
+    .footer__legal a:hover { color: rgba(255,255,255,.65); }
+
+    /* ── Responsive ── */
+    @media (max-width: 1100px) {
+      .grid-4, .savings__grid { grid-template-columns: repeat(2,1fr); }
+      .saving-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,.1); }
+      .flow-steps  { flex-wrap: wrap; }
+      .flow-step   { min-width: 45%; }
+      .footer__grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 900px) {
+      .hero__grid, .grid-2 { grid-template-columns: 1fr; }
+      .hero { padding: 8rem 0 5rem; }
+      .ccai-cards, .grid-3, .pricing-grid { grid-template-columns: 1fr 1fr; }
+      .integrations-grid { grid-template-columns: 1fr; }
+      .nav__menu { display: none; }
+      .nav__hamburger { display: flex; }
+      .hero__float { display: none; }
+    }
+    @media (max-width: 600px) {
+      .ccai-cards, .grid-3, .grid-4, .pricing-grid, .savings__grid { grid-template-columns: 1fr; }
+      .section { padding: 4rem 0; }
+      h1 { font-size: 2.1rem; }
+      h2 { font-size: 1.75rem; }
+      .cta-band__inner { flex-direction: column; }
+      .saving-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,.1); }
+    }
+
+    /* ── Scroll animations ── */
+    .fade-up { opacity: 0; transform: translateY(24px); transition: opacity .55s ease, transform .55s ease; }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body>
+
+<!-- ═══ NAVIGATION ═══ -->
+<nav class="nav" id="nav">
+  <div class="container">
+    <div class="nav__inner">
+      <a href="#" class="nav__logo">
+        <div class="nav__logo-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/>
+          </svg>
+        </div>
+        Contribute<em>AI</em>
+      </a>
+
+      <ul class="nav__menu">
+        <li class="nav__item">
+          <span class="nav__link">Products <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
+          <div class="nav__dropdown">
+            <div class="nav__dd-item">
+              <div class="nav__dd-icon nav__dd-icon--blue">🤖</div>
+              <div class="nav__dd-text"><strong>Virtual Agent</strong><span>CCAI CX + Vertex AI</span></div>
+            </div>
+            <div class="nav__dd-item">
+              <div class="nav__dd-icon nav__dd-icon--teal">📅</div>
+              <div class="nav__dd-text"><strong>Calendar Booking</strong><span>Gmail & Outlook integration</span></div>
+            </div>
+            <div class="nav__dd-item">
+              <div class="nav__dd-icon nav__dd-icon--orange">⬛</div>
+              <div class="nav__dd-text"><strong>QR Pro</strong><span>Advanced QR code tools</span></div>
+            </div>
+          </div>
+        </li>
+        <li class="nav__item">
+          <span class="nav__link">Solutions <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
+          <div class="nav__dropdown">
+            <div class="nav__dd-item">
+              <div class="nav__dd-icon nav__dd-icon--blue">📞</div>
+              <div class="nav__dd-text"><strong>Call Centers</strong><span>Reduce agent costs by 60%</span></div>
+            </div>
+            <div class="nav__dd-item">
+              <div class="nav__dd-icon nav__dd-icon--green">🏥</div>
+              <div class="nav__dd-text"><strong>Healthcare</strong><span>Appointment booking AI</span></div>
+            </div>
+            <div class="nav__dd-item">
+              <div class="nav__dd-icon nav__dd-icon--amber">🏪</div>
+              <div class="nav__dd-text"><strong>Retail & SMB</strong><span>QR + virtual support</span></div>
+            </div>
+          </div>
+        </li>
+        <li class="nav__item"><a href="#integrations" class="nav__link">Integrations</a></li>
+        <li class="nav__item"><a href="#pricing" class="nav__link">Pricing</a></li>
+        <li class="nav__item"><a href="#" class="nav__link">Docs</a></li>
+      </ul>
+
+      <div class="nav__actions">
+        <a href="signup.html" class="nav__signin">Sign in</a>
+        <a href="book-demo.html" class="btn btn-primary btn-sm">Book a Demo</a>
+        <button class="nav__hamburger" id="hamburger" aria-label="Menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <span class="nav__link">Virtual Agent</span>
+  <span class="nav__link">Calendar Booking</span>
+  <span class="nav__link">QR Pro</span>
+  <a href="#integrations" class="nav__link">Integrations</a>
+  <a href="#pricing" class="nav__link">Pricing</a>
+  <a href="#download" class="btn btn-primary">Get Started</a>
+</div>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero" id="hero">
+  <div class="container">
+    <div class="hero__grid">
+      <!-- Copy -->
+      <div>
+        <div class="hero__badge">Now powered by Google CCAI CX &amp; Vertex AI</div>
+        <h1>AI Virtual Agents That <span>Run Your Call Center</span> — Automatically</h1>
+        <p class="lead">ContributeAI deploys intelligent virtual agents on your phone lines — powered by Google CCAI CX and Vertex AI — that handle calls, understand intent, and book calendar appointments directly into Gmail and Outlook. No human agent required.</p>
+        <div class="hero__powered">
+          <span>Powered by</span>
+          <div class="powered-badge"><span class="dot dot-google"></span> Google CCAI CX</div>
+          <div class="powered-badge"><span class="dot dot-vertex"></span> Vertex AI</div>
+          <div class="powered-badge"><span class="dot dot-ccai"></span> Dialogflow CX</div>
+        </div>
+        <div class="btn-group">
+          <a href="book-demo.html" class="btn btn-primary btn-lg">Book a Demo</a>
+          <a href="signup.html" class="btn btn-outline btn-lg">Get Started Free</a>
+        </div>
+        <div class="hero__meta">
+          <div class="hero__stat"><strong>60%</strong><span>Cost Reduction</span></div>
+          <div class="hero__div"></div>
+          <div class="hero__stat"><strong>24/7</strong><span>Agent Availability</span></div>
+          <div class="hero__div"></div>
+          <div class="hero__stat"><strong>0 sec</strong><span>Wait Time</span></div>
+          <div class="hero__div"></div>
+          <div class="hero__stat"><strong>98%</strong><span>Intent Accuracy</span></div>
+        </div>
+      </div>
+
+      <!-- Dashboard Visual -->
+      <div style="position:relative;">
+        <div class="hero__float hero__float--tl">
+          <div class="float-icon float-icon--teal">🤖</div>
+          <div class="float-text"><strong>Virtual Agent Active</strong><span>Handling 12 calls now</span></div>
+        </div>
+        <div class="hero__float hero__float--br">
+          <div class="float-icon float-icon--green">📅</div>
+          <div class="float-text"><strong>Appointment Booked</strong><span>Added to Google Calendar</span></div>
+        </div>
+        <div class="agent-dash">
+          <div class="dash-bar">
+            <div class="dash-dot dash-dot--r"></div>
+            <div class="dash-dot dash-dot--y"></div>
+            <div class="dash-dot dash-dot--g"></div>
+            <span class="dash-title">ContributeAI — Virtual Agent Console</span>
+          </div>
+          <div class="dash-body">
+            <!-- Metrics row -->
+            <div class="dash-row">
+              <div class="dash-metric">
+                <div class="dash-metric__val dash-metric__val--teal">12</div>
+                <div class="dash-metric__label">Active Calls</div>
+                <div class="dash-metric__trend dash-metric__trend--up">↑ 3 vs avg</div>
+              </div>
+              <div class="dash-metric">
+                <div class="dash-metric__val dash-metric__val--orange">$0</div>
+                <div class="dash-metric__label">Agent Cost Today</div>
+                <div class="dash-metric__trend dash-metric__trend--down">↓ 60% saved</div>
+              </div>
+              <div class="dash-metric">
+                <div class="dash-metric__val dash-metric__val--amber">47</div>
+                <div class="dash-metric__label">Appts Booked</div>
+                <div class="dash-metric__trend dash-metric__trend--up">↑ Auto via AI</div>
+              </div>
+            </div>
+            <!-- Live conversation -->
+            <div class="dash-convo">
+              <div class="dash-convo__header">
+                <span class="dash-convo__title">Live Call — Caller #1,284</span>
+                <span class="dash-live">LIVE</span>
+              </div>
+              <div class="msg msg--agent">
+                <div class="msg__avatar msg__avatar--agent">AI</div>
+                <div class="msg__bubble msg__bubble--agent">Hi! I'm ContributeAI. How can I help you today?</div>
+              </div>
+              <div class="msg msg--user">
+                <div class="msg__avatar msg__avatar--user">U</div>
+                <div class="msg__bubble msg__bubble--user">I'd like to book an appointment for Tuesday.</div>
+              </div>
+              <div class="msg msg--agent">
+                <div class="msg__avatar msg__avatar--agent">AI</div>
+                <div class="msg__bubble msg__bubble--agent">I have 2pm and 3:30pm available. Which works for you?</div>
+              </div>
+            </div>
+            <!-- Calendar -->
+            <div class="dash-cal">
+              <div class="dash-cal__header">
+                <span class="dash-cal__title">Auto-Booked Today</span>
+                <div class="cal-integration">
+                  <span class="cal-chip cal-chip--gmail">Gmail</span>
+                  <span class="cal-chip cal-chip--outlook">Outlook</span>
+                </div>
+              </div>
+              <div class="cal-event">
+                <div class="cal-event__dot cal-event__dot--teal"></div>
+                <div class="cal-event__body"><strong>Dr. Smith Consultation</strong><span>Tue 2:00 PM — booked by AI agent</span></div>
+                <span class="cal-event__badge">Gmail ✓</span>
+              </div>
+              <div class="cal-event">
+                <div class="cal-event__dot cal-event__dot--orange"></div>
+                <div class="cal-event__body"><strong>Sales Discovery Call</strong><span>Wed 10:30 AM — booked by AI agent</span></div>
+                <span class="cal-event__badge">Outlook ✓</span>
+              </div>
+              <div class="cal-event">
+                <div class="cal-event__dot cal-event__dot--amber"></div>
+                <div class="cal-event__body"><strong>Service Appointment</strong><span>Thu 4:00 PM — booked by AI agent</span></div>
+                <span class="cal-event__badge">Gmail ✓</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TRUSTED BY ═══ -->
+<section class="logos">
+  <div class="container">
+    <p class="logos__label">Trusted by forward-thinking businesses cutting call center costs</p>
+    <div class="logos__track">
+      <span class="logo-item">MedFirst Clinics</span>
+      <span class="logo-item">SwiftServe BPO</span>
+      <span class="logo-item">Nexus Financial</span>
+      <span class="logo-item">PrimeHealth</span>
+      <span class="logo-item">Horizon Auto</span>
+      <span class="logo-item">Apex Support Co.</span>
+      <span class="logo-item">ClearLine Telecom</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CCAI CX + VERTEX AI ═══ -->
+<section class="section section--alt" id="platform">
+  <div class="container">
+    <div class="text-center" style="max-width:640px; margin:0 auto 1rem;">
+      <span class="label">The Platform</span>
+      <h2>Enterprise AI built on Google's most powerful infrastructure</h2>
+      <p class="lead" style="margin-top:1rem;">ContributeAI sits on top of Google CCAI CX and Vertex AI — the same AI stack used by the world's largest enterprises — and makes it accessible to any call center in minutes.</p>
+    </div>
+    <div class="ccai-cards fade-up">
+      <div class="ccai-card">
+        <div class="ccai-card__icon ccai-card__icon--blue">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#4285F4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <h3>Google CCAI CX</h3>
+        <p>Dialogflow CX-powered virtual agents handle complex multi-turn conversations — understanding caller intent, managing state, and escalating to live agents only when truly needed.</p>
+        <span class="ccai-card__tag tag--ccai">Dialogflow CX</span>
+      </div>
+      <div class="ccai-card">
+        <div class="ccai-card__icon ccai-card__icon--purple">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#a142f4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <h3>Vertex AI Intelligence</h3>
+        <p>Google's Vertex AI models power real-time understanding, sentiment analysis, and predictive routing — so your virtual agents get smarter with every call, continuously improving accuracy.</p>
+        <span class="ccai-card__tag tag--vertex">Vertex AI</span>
+      </div>
+      <div class="ccai-card">
+        <div class="ccai-card__icon ccai-card__icon--green">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#34A853" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        </div>
+        <h3>Natural Language Understanding</h3>
+        <p>Advanced NLU from Google's CCAI stack means callers speak naturally — no press-1 menus. The agent understands context, accents, and complex requests just like a trained human would.</p>
+        <span class="ccai-card__tag tag--nlu">NLU Engine</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ VIRTUAL AGENT FLOW ═══ -->
+<section class="section section--gradient" id="demo">
+  <div class="container">
+    <div class="flow-intro fade-up">
+      <span class="label label--white">How It Works</span>
+      <h2 style="color:#fff;">A call comes in. Your AI handles it — start to finish.</h2>
+      <p class="lead lead--white" style="margin-top:1rem;">From the first ring to a booked calendar event, ContributeAI's virtual agent manages the entire call autonomously. No hold music. No wait time. No agent salary.</p>
+    </div>
+    <div class="flow-steps">
+      <div class="flow-step flow-step--active fade-up">
+        <div class="flow-step__num">1</div>
+        <div class="flow-step__icon">📞</div>
+        <h4>Call Received</h4>
+        <p>Caller dials your number. ContributeAI Virtual Agent answers instantly — no hold time, no IVR menus.</p>
+        <span class="flow-step__tag">CCAI CX</span>
+      </div>
+      <div class="flow-step fade-up">
+        <div class="flow-step__num">2</div>
+        <div class="flow-step__icon">🧠</div>
+        <h4>Intent Detected</h4>
+        <p>Vertex AI analyzes natural speech in real time, identifies caller intent, and selects the right response flow.</p>
+        <span class="flow-step__tag">Vertex AI NLU</span>
+      </div>
+      <div class="flow-step fade-up">
+        <div class="flow-step__num">3</div>
+        <div class="flow-step__icon">💬</div>
+        <h4>Conversation Handled</h4>
+        <p>The agent engages in multi-turn dialogue, collects needed info, and resolves the query — without any human.</p>
+        <span class="flow-step__tag">Dialogflow CX</span>
+      </div>
+      <div class="flow-step fade-up">
+        <div class="flow-step__num">4</div>
+        <div class="flow-step__icon">📅</div>
+        <h4>Appointment Booked</h4>
+        <p>If scheduling is needed, the agent creates the calendar event directly in Gmail or Outlook — confirmed live on the call.</p>
+        <span class="flow-step__tag">Gmail / Outlook</span>
+      </div>
+      <div class="flow-step fade-up">
+        <div class="flow-step__num">5</div>
+        <div class="flow-step__icon">✅</div>
+        <h4>Call Resolved</h4>
+        <p>Caller gets what they needed. Your business saves an agent's time. Dashboard logs everything automatically.</p>
+        <span class="flow-step__tag">No Agent Needed</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CALENDAR INTEGRATIONS ═══ -->
+<section class="section" id="integrations">
+  <div class="container">
+    <div class="grid-2">
+      <div>
+        <div class="cal-section__intro">
+          <span class="label">Calendar Integrations</span>
+          <h2>Virtual agents book appointments — directly into Gmail &amp; Outlook</h2>
+          <p class="lead" style="margin-top:1rem;">When a caller needs to schedule an appointment, ContributeAI's virtual agent doesn't put them on hold or transfer them. It checks availability in real time and creates the calendar event — in Gmail Calendar or Microsoft Outlook — while the caller is still on the phone.</p>
+        </div>
+        <div class="integrations-grid fade-up">
+          <!-- Gmail -->
+          <div class="integration-card integration-card--gmail">
+            <div class="integration-logo">
+              <div class="integration-logo__icon integration-logo__icon--gmail">
+                <svg width="28" height="28" viewBox="0 0 24 24"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.910 1.528-1.145C21.69 2.28 24 3.434 24 5.457z" fill="#EA4335"/></svg>
+              </div>
+              <div>
+                <div class="integration-logo__name">Gmail Calendar</div>
+                <div class="integration-logo__badge">Google Workspace</div>
+              </div>
+            </div>
+            <ul class="integration-features">
+              <li class="integration-feature"><span class="check-icon check-icon--gmail">✓</span>Read real-time availability from Google Calendar</li>
+              <li class="integration-feature"><span class="check-icon check-icon--gmail">✓</span>Create calendar events with full caller details</li>
+              <li class="integration-feature"><span class="check-icon check-icon--gmail">✓</span>Send confirmation email automatically via Gmail</li>
+              <li class="integration-feature"><span class="check-icon check-icon--gmail">✓</span>Add Google Meet link if virtual meeting needed</li>
+              <li class="integration-feature"><span class="check-icon check-icon--gmail">✓</span>Sync across all Google Workspace team members</li>
+            </ul>
+            <div class="integration-flow">
+              <p><strong>OAuth 2.0 secure.</strong> Connects to your Google Workspace account with read/write calendar scope. The virtual agent acts on behalf of your business — no personal data stored.</p>
+            </div>
+          </div>
+
+          <!-- Outlook -->
+          <div class="integration-card integration-card--outlook">
+            <div class="integration-logo">
+              <div class="integration-logo__icon integration-logo__icon--outlook">
+                <svg width="28" height="28" viewBox="0 0 24 24"><path d="M7.88 12.04q0 .45-.11.87-.1.41-.33.74-.22.33-.58.52-.37.2-.87.2t-.85-.2q-.35-.21-.57-.55-.22-.33-.33-.75-.1-.42-.1-.86t.1-.87q.1-.43.34-.76.22-.34.59-.54.36-.2.87-.2t.86.2q.35.21.57.55.22.34.31.77.1.43.1.88zM24 12v9.38q0 .46-.33.8-.33.32-.8.32H7.13q-.46 0-.8-.33-.32-.33-.32-.8V18H1q-.41 0-.7-.3-.3-.29-.3-.7V7q0-.41.3-.7Q.58 6 1 6h6.5V2.55q0-.44.3-.75.3-.3.75-.3h12.9q.44 0 .75.3.3.3.3.75V10.85l1.24.72q.07.04.11.1.04.06.04.13v.2zm-6-8.25v3h3zm-3 8.5l3-1.75V12H15V8H8.5v1H7q-.41 0-.7.3-.3.29-.3.7v6q0 .41.3.7.29.3.7.3h.5v.7H1V7.46l12-1.86v12.8z" fill="#0078D4"/></svg>
+              </div>
+              <div>
+                <div class="integration-logo__name">Microsoft Outlook</div>
+                <div class="integration-logo__badge">Microsoft 365</div>
+              </div>
+            </div>
+            <ul class="integration-features">
+              <li class="integration-feature"><span class="check-icon check-icon--outlook">✓</span>Read Outlook Calendar free/busy via Microsoft Graph</li>
+              <li class="integration-feature"><span class="check-icon check-icon--outlook">✓</span>Create events in Outlook Calendar with all details</li>
+              <li class="integration-feature"><span class="check-icon check-icon--outlook">✓</span>Send confirmation via Outlook email automatically</li>
+              <li class="integration-feature"><span class="check-icon check-icon--outlook">✓</span>Include Teams meeting link when applicable</li>
+              <li class="integration-feature"><span class="check-icon check-icon--outlook">✓</span>Works with Exchange, Microsoft 365, and Outlook.com</li>
+            </ul>
+            <div class="integration-flow">
+              <p><strong>Microsoft Graph API.</strong> Authenticated via Azure AD with least-privilege calendar scopes. Enterprise SSO and conditional access policies fully respected.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Booking Visual -->
+      <div class="fade-up">
+        <div class="cal-visual">
+          <div class="cal-visual__header">
+            <span class="cal-visual__title">🤖 Virtual Agent — Booking in Progress</span>
+            <div class="cal-integrations-row">
+              <span class="int-pill int-pill--gmail">● Gmail</span>
+              <span class="int-pill int-pill--outlook">● Outlook</span>
+            </div>
+          </div>
+          <div class="cal-booking-flow">
+            <div class="booking-step">
+              <div class="booking-step__icon" style="background:rgba(66,133,244,.2);">📞</div>
+              <div class="booking-step__body">
+                <h5>Caller requests appointment</h5>
+                <p>"I need to book a consultation for next Tuesday afternoon."</p>
+              </div>
+            </div>
+            <div class="booking-connector"></div>
+            <div class="booking-step">
+              <div class="booking-step__icon" style="background:rgba(161,66,244,.2);">🧠</div>
+              <div class="booking-step__body">
+                <h5>Vertex AI extracts intent + time preference</h5>
+                <p>Entity: appointment_request | Time: Tuesday PM | Confidence: 99%</p>
+              </div>
+            </div>
+            <div class="booking-connector"></div>
+            <div class="booking-step">
+              <div class="booking-step__icon" style="background:rgba(234,67,53,.15);">📅</div>
+              <div class="booking-step__body">
+                <h5>Checks Gmail Calendar availability</h5>
+                <p>Free slots found: Tuesday 2:00 PM, 3:30 PM via Google Calendar API</p>
+              </div>
+            </div>
+            <div class="booking-connector"></div>
+            <div class="booking-step">
+              <div class="booking-step__icon" style="background:rgba(24,202,168,.15);">✅</div>
+              <div class="booking-step__body">
+                <h5>Caller confirms: "2pm works great"</h5>
+                <p>Agent: "Perfect! I'm booking that right now..."</p>
+              </div>
+            </div>
+            <div class="booking-connector"></div>
+          </div>
+          <div class="booked-event">
+            <div class="booked-event__icon">🗓️</div>
+            <div class="booked-event__body">
+              <strong>Appointment Confirmed — Tuesday 2:00 PM</strong>
+              <span>Created in Gmail Calendar · Confirmation email sent · No agent involved</span>
+            </div>
+            <div class="booked-event__check">✓</div>
+          </div>
+          <!-- Outlook example -->
+          <div class="booked-event" style="background:rgba(0,120,212,.12); border-color:rgba(0,120,212,.25);">
+            <div class="booked-event__icon">📧</div>
+            <div class="booked-event__body">
+              <strong style="color:#5ba4ff;">Service Appt — Thursday 10:00 AM</strong>
+              <span>Created in Outlook Calendar · Teams invite sent · Zero agent cost</span>
+            </div>
+            <div class="booked-event__check" style="background:var(--ms-blue);">✓</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SAVINGS STATS ═══ -->
+<section class="section--dark" id="savings">
+  <div class="container">
+    <div class="text-center" style="margin-bottom:3.5rem;">
+      <span class="label">The Business Case</span>
+      <h2 style="color:#fff;">Real savings. Measurable ROI. From day one.</h2>
+    </div>
+    <div class="savings__grid fade-up">
+      <div class="saving-item">
+        <div class="saving-item__num saving-item__num--teal">60<span style="font-size:2rem;">%</span></div>
+        <strong>Cost Reduction</strong>
+        <span>Average call center cost savings when virtual agents handle Tier-1 calls</span>
+      </div>
+      <div class="saving-item">
+        <div class="saving-item__num saving-item__num--orange">24/7</div>
+        <strong>Always Available</strong>
+        <span>Virtual agents never sleep, never call in sick, and never need overtime pay</span>
+      </div>
+      <div class="saving-item">
+        <div class="saving-item__num saving-item__num--amber">&lt; 1s</div>
+        <strong>Answer Time</strong>
+        <span>Zero hold time — every caller answered instantly, every time</span>
+      </div>
+      <div class="saving-item">
+        <div class="saving-item__num saving-item__num--white">98<span style="font-size:2rem;">%</span></div>
+        <strong>Intent Accuracy</strong>
+        <span>Vertex AI NLU correctly understands and routes 98% of caller requests</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ QR PRO ═══ -->
+<section class="section section--alt" id="qrpro">
+  <div class="container">
+    <div class="features-intro fade-up">
+      <span class="label label--orange">Also Included — QR Pro</span>
+      <h2>Advanced QR Code Tools for Small Businesses</h2>
+      <p class="lead" style="margin-top:1rem;">Alongside our call center AI, ContributeAI QR Pro gives your team instant QR code generation, scanning, and file reading — all in one iOS app.</p>
+    </div>
+    <div class="grid-4 fade-up">
+      <div class="feature-card">
+        <div class="feature-card__icon feature-card__icon--orange">⬛</div>
+        <h3>QR Generator</h3>
+        <p>Create QR codes for URLs, maps, email, phone, WiFi, and text. Instant and unlimited.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card__icon feature-card__icon--teal">📷</div>
+        <h3>Live Scanner</h3>
+        <p>Real-time camera scanning with torch support. Read any code, even in low light.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card__icon feature-card__icon--amber">📄</div>
+        <h3>File Reader</h3>
+        <p>Extract QR codes from JPG, PNG, HEIC images, and PDF documents without a camera.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card__icon feature-card__icon--navy">📊</div>
+        <h3>History &amp; Analytics</h3>
+        <p>Track all generated codes with quick-access history and usage analytics built in.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TESTIMONIALS ═══ -->
+<section class="section" id="testimonials">
+  <div class="container">
+    <div class="testi-intro fade-up">
+      <span class="label">Customer Stories</span>
+      <h2>Call centers saving real money with ContributeAI</h2>
+    </div>
+    <div class="grid-3 fade-up">
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"We handle 800 inbound calls a day. ContributeAI's virtual agent now resolves 70% of them without a single human agent picking up. Our staffing costs dropped by $40K a month. The Gmail calendar booking alone was worth the switch."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:var(--google-b);">JR</div>
+          <div class="testi-info"><strong>James R.</strong><span>VP Operations, SwiftServe BPO</span></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"Our patients call to book appointments. Previously we needed 6 full-time receptionists. Now ContributeAI's agent answers every call and books directly into Outlook — our team just reviews the calendar each morning. Incredible."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:var(--google-g);">DK</div>
+          <div class="testi-info"><strong>Dr. Diana K.</strong><span>Practice Director, PrimeHealth Clinics</span></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"The Vertex AI NLU is genuinely impressive. Callers ask complex questions in natural language and the agent handles them. The CCAI CX integration was seamless and we were live in two weeks. ROI was visible in the first month."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:var(--orange);">ML</div>
+          <div class="testi-info"><strong>Marcus L.</strong><span>CTO, Nexus Financial</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CTA BAND ═══ -->
+<section class="cta-band">
+  <div class="container">
+    <div class="cta-band__inner">
+      <div>
+        <h2>Stop paying agents to answer calls your AI can handle</h2>
+        <p class="lead">Deploy ContributeAI Virtual Agent in days — not months. Powered by Google CCAI CX and Vertex AI.</p>
+      </div>
+      <div class="btn-group">
+        <a href="#download" class="btn btn-outline btn-lg">Book a Demo</a>
+        <a href="#pricing" class="btn btn-teal btn-lg">See Pricing</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PRICING ═══ -->
+<section class="section" id="pricing">
+  <div class="container">
+    <div class="pricing-intro fade-up">
+      <span class="label">Pricing</span>
+      <h2>Transparent pricing. Immediate ROI.</h2>
+      <p class="lead" style="margin-top:1rem;">Every plan includes the virtual agent, calendar integrations, and QR Pro. Pay less than one agent's monthly salary — serve all your callers.</p>
+    </div>
+    <div class="pricing-grid fade-up">
+      <div class="pricing-card">
+        <div class="pricing-name">Starter</div>
+        <div class="pricing-price"><sup>$</sup>299</div>
+        <div class="pricing-period">per month</div>
+        <p class="pricing-desc">For small businesses ready to automate their first call line with AI.</p>
+        <ul class="pricing-features">
+          <li class="pf">1 virtual agent phone line</li>
+          <li class="pf">Up to 500 calls/month</li>
+          <li class="pf">Gmail Calendar integration</li>
+          <li class="pf">Dialogflow CX intent engine</li>
+          <li class="pf">Basic analytics dashboard</li>
+          <li class="pf">QR Pro app (iOS)</li>
+        </ul>
+        <a href="mailto:support@contributeai.com" class="btn btn-outline--navy" style="width:100%;justify-content:center;">Get Started</a>
+      </div>
+
+      <div class="pricing-card featured">
+        <div class="pricing-name">Professional</div>
+        <div class="pricing-price"><sup>$</sup>799</div>
+        <div class="pricing-period">per month</div>
+        <p class="pricing-desc">For growing call centers replacing Tier-1 agents with AI across multiple lines.</p>
+        <ul class="pricing-features">
+          <li class="pf">Up to 5 virtual agent lines</li>
+          <li class="pf">Unlimited calls</li>
+          <li class="pf">Gmail + Outlook Calendar</li>
+          <li class="pf">Vertex AI NLU engine</li>
+          <li class="pf">Live agent escalation routing</li>
+          <li class="pf">Full call analytics + recordings</li>
+          <li class="pf">Teams &amp; Google Meet links</li>
+          <li class="pf">QR Pro (unlimited)</li>
+        </ul>
+        <a href="mailto:support@contributeai.com" class="btn btn-primary" style="width:100%;justify-content:center;">Start Free Trial</a>
+      </div>
+
+      <div class="pricing-card">
+        <div class="pricing-name">Enterprise</div>
+        <div class="pricing-price" style="font-size:2rem;margin-top:1rem;">Custom</div>
+        <div class="pricing-period">contact us</div>
+        <p class="pricing-desc">For large call centers replacing entire agent teams with AI-first operations.</p>
+        <ul class="pricing-features">
+          <li class="pf">Unlimited agent lines</li>
+          <li class="pf">Custom CCAI CX flows</li>
+          <li class="pf">Vertex AI fine-tuning</li>
+          <li class="pf">CRM integrations (Salesforce, HubSpot)</li>
+          <li class="pf">SSO / Azure AD / SAML</li>
+          <li class="pf">Dedicated SLA + support</li>
+          <li class="pf">On-prem / VPC deployment</li>
+          <li class="pf">White-label options</li>
+        </ul>
+        <a href="mailto:enterprise@contributeai.com" class="btn btn-outline--navy" style="width:100%;justify-content:center;">Contact Sales</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SECURITY ═══ -->
+<section class="section section--navy-d" id="security">
+  <div class="container">
+    <div class="grid-2">
+      <div class="security-badges fade-up">
+        <div class="sec-badge"><div class="sec-badge__icon">🔐</div><div class="sec-badge__name">OAuth 2.0</div><div class="sec-badge__desc">Secure Gmail &amp; Outlook auth — no passwords stored</div></div>
+        <div class="sec-badge"><div class="sec-badge__icon">🌐</div><div class="sec-badge__name">Google Cloud</div><div class="sec-badge__desc">SOC 2, ISO 27001, HIPAA-eligible infrastructure</div></div>
+        <div class="sec-badge"><div class="sec-badge__icon">🔒</div><div class="sec-badge__name">TLS 1.3</div><div class="sec-badge__desc">All voice &amp; data encrypted in transit</div></div>
+        <div class="sec-badge"><div class="sec-badge__icon">🛡️</div><div class="sec-badge__name">GDPR Ready</div><div class="sec-badge__desc">Caller data handled with privacy-first policies</div></div>
+      </div>
+      <div class="fade-up">
+        <span class="label label--white">Security &amp; Compliance</span>
+        <h2>Enterprise security for every call, every calendar event</h2>
+        <p class="lead lead--white" style="margin-top:1rem;margin-bottom:2rem;">Your call data and calendar access are protected by Google Cloud's enterprise-grade security — the same infrastructure that powers Gmail, Workspace, and Google Cloud for 9 million businesses.</p>
+        <ul class="security-list">
+          <li class="sec-item"><div class="sec-item__icon">🔑</div><div><h4>Least-Privilege Calendar Access</h4><p>Gmail and Outlook integrations use minimal OAuth scopes — we only access calendars, never email content.</p></div></li>
+          <li class="sec-item"><div class="sec-item__icon">🎙️</div><div><h4>Ephemeral Call Transcripts</h4><p>Call transcripts used only for intent detection — deleted after session or retained only per your policy.</p></div></li>
+          <li class="sec-item"><div class="sec-item__icon">📋</div><div><h4>HIPAA-Eligible Deployment</h4><p>Healthcare customers can deploy on HIPAA-eligible Google Cloud infrastructure with BAA available.</p></div></li>
+        </ul>
+        <a href="#" class="btn btn-outline">View Security Docs</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ DOWNLOAD ═══ -->
+<section class="download" id="download">
+  <div class="container">
+    <div class="download__inner">
+      <span class="label">Get Started Today</span>
+      <h2>Deploy your AI virtual agent in days</h2>
+      <p class="lead lead--white">Book a demo to see ContributeAI Virtual Agent live — or download QR Pro on the App Store and start generating QR codes instantly. Both products, one platform.</p>
+      <div class="store-btns">
+        <div class="store-btn">
+          <div class="store-btn__icon">🗓️</div>
+          <div class="store-btn__text"><span>Schedule a</span><strong>Live Demo</strong></div>
+        </div>
+        <div class="store-btn">
+          <div class="store-btn__icon">🍎</div>
+          <div class="store-btn__text"><span>Download on the</span><strong>App Store</strong></div>
+        </div>
+        <div class="store-btn" style="opacity:.4;cursor:not-allowed;">
+          <div class="store-btn__icon">▶</div>
+          <div class="store-btn__text"><span>Coming soon to</span><strong>Google Play</strong></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <a href="#" class="nav__logo" style="font-size:1.1rem;">
+          <div class="nav__logo-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+          </div>
+          <span style="color:#fff;">Contribute<em style="color:var(--orange);font-style:normal;">AI</em></span>
+        </a>
+        <p>AI virtual agents + QR intelligence for modern businesses. Powered by Google CCAI CX and Vertex AI.</p>
+        <div class="footer__social">
+          <a href="https://twitter.com/contributeai" class="social-link">𝕏</a>
+          <a href="https://linkedin.com/company/contributeai" class="social-link" style="font-size:.75rem;">in</a>
+          <a href="https://github.com/contributeai" class="social-link">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer__col">
+        <h5>Products</h5>
+        <ul class="footer__links">
+          <li><span class="footer__link">Virtual Agent</span></li>
+          <li><span class="footer__link">Calendar Booking</span></li>
+          <li><span class="footer__link">CCAI CX Integration</span></li>
+          <li><span class="footer__link">Vertex AI NLU</span></li>
+          <li><span class="footer__link">QR Pro iOS App</span></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <h5>Integrations</h5>
+        <ul class="footer__links">
+          <li><span class="footer__link">Gmail Calendar</span></li>
+          <li><span class="footer__link">Microsoft Outlook</span></li>
+          <li><span class="footer__link">Google CCAI CX</span></li>
+          <li><span class="footer__link">Vertex AI</span></li>
+          <li><span class="footer__link">Salesforce CRM</span></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <h5>Solutions</h5>
+        <ul class="footer__links">
+          <li><span class="footer__link">Call Centers</span></li>
+          <li><span class="footer__link">Healthcare</span></li>
+          <li><span class="footer__link">Financial Services</span></li>
+          <li><span class="footer__link">Retail & SMB</span></li>
+          <li><span class="footer__link">Enterprise</span></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <h5>Company</h5>
+        <ul class="footer__links">
+          <li><span class="footer__link">About</span></li>
+          <li><span class="footer__link">Blog</span></li>
+          <li><span class="footer__link">Careers</span></li>
+          <li><a href="mailto:support@contributeai.com" class="footer__link">Contact</a></li>
+          <li><span class="footer__link">Security</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <p>&copy; 2024 ContributeAI. All rights reserved. Built on Google Cloud.</p>
+      <div class="footer__legal">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Cookie Policy</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Nav scroll
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 20));
+
+  // Mobile menu
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  hamburger.addEventListener('click', () => mobileMenu.classList.toggle('open'));
+  document.addEventListener('click', e => { if (!nav.contains(e.target)) mobileMenu.classList.remove('open'); });
+
+  // Smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const t = document.querySelector(a.getAttribute('href'));
+      if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); mobileMenu.classList.remove('open'); }
+    });
+  });
+
+  // Intersection observer — fade-up
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-up, .testi-card, .feature-card, .pricing-card, .ccai-card, .integration-card, .sec-badge').forEach((el, i) => {
+    el.style.transitionDelay = `${(i % 4) * 0.08}s`;
+    io.observe(el);
+  });
+
+  // Live conversation animation
+  const messages = [
+    { role: 'agent', text: "Hi! I'm ContributeAI. How can I help you today?" },
+    { role: 'user',  text: "I'd like to book an appointment for Tuesday." },
+    { role: 'agent', text: "I have 2pm and 3:30pm available. Which works for you?" },
+    { role: 'user',  text: "2pm please." },
+    { role: 'agent', text: "Great — I'm booking Tuesday at 2pm and adding it to your calendar now. You'll get a confirmation shortly!" },
+  ];
+  let msgIdx = 0;
+  const convo = document.querySelector('.dash-convo');
+  if (convo) {
+    // Clear and re-animate messages periodically
+    setInterval(() => {
+      const allMsgs = convo.querySelectorAll('.msg');
+      if (allMsgs.length > 8) { allMsgs[2].remove(); allMsgs[3] && allMsgs[3].remove(); }
+      const m = messages[msgIdx % messages.length];
+      const div = document.createElement('div');
+      div.className = `msg msg--${m.role}`;
+      div.style.opacity = '0';
+      div.style.transition = 'opacity 0.4s ease';
+      div.innerHTML = `<div class="msg__avatar msg__avatar--${m.role}">${m.role === 'agent' ? 'AI' : 'U'}</div><div class="msg__bubble msg__bubble--${m.role}">${m.text}</div>`;
+      convo.appendChild(div);
+      setTimeout(() => div.style.opacity = '1', 50);
+      msgIdx++;
+    }, 2500);
+  }
+</script>
+</body>
+</html>

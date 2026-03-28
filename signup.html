@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up — ContributeAI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --orange:#FF451A;--orange-h:#e03610;
+      --navy:#152550;--navy-d:#0D1630;
+      --teal:#18CAA8;--amber:#F7AD00;
+      --google:#4285F4;--ms:#0078D4;
+      --white:#fff;--off:#F9F8F5;
+      --gray-lt:#f1f0ed;--gray:#6b7280;--gray-dk:#374151;
+      --radius:1rem;
+      --shadow:0 4px 24px rgba(21,37,80,.1);
+      --shadow-lg:0 16px 56px rgba(21,37,80,.16);
+      --trans:.22s ease;
+    }
+    html{scroll-behavior:smooth}
+    body{font-family:'Roboto',sans-serif;min-height:100vh;display:flex;background:var(--off)}
+
+    /* ── LEFT PANEL ── */
+    .left{
+      width:480px;flex-shrink:0;
+      background:var(--navy-d);
+      display:flex;flex-direction:column;
+      padding:2.5rem;
+      position:relative;overflow:hidden;
+    }
+    .left::before{content:'';position:absolute;top:-20%;right:-15%;width:500px;height:500px;background:radial-gradient(circle,rgba(255,69,26,.2) 0%,transparent 65%);pointer-events:none}
+    .left::after{content:'';position:absolute;bottom:-20%;left:-10%;width:400px;height:400px;background:radial-gradient(circle,rgba(24,202,168,.13) 0%,transparent 65%);pointer-events:none}
+
+    .left-logo{display:flex;align-items:center;gap:.75rem;text-decoration:none;position:relative;z-index:1;margin-bottom:auto}
+    .left-logo-icon{width:40px;height:40px;background:var(--orange);border-radius:.625rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .left-logo-name{font-size:1.2rem;font-weight:900;color:#fff}
+    .left-logo-name em{color:var(--orange);font-style:normal}
+
+    .left-body{position:relative;z-index:1;margin-bottom:auto;padding:2rem 0}
+    .left-badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(24,202,168,.15);border:1px solid rgba(24,202,168,.3);border-radius:100px;padding:.35rem .9rem;font-size:.75rem;font-weight:700;color:var(--teal);margin-bottom:1.75rem}
+    .left-badge::before{content:'';width:6px;height:6px;background:var(--teal);border-radius:50%}
+    .left-body h2{font-size:clamp(1.625rem,2.2vw,2.25rem);font-weight:700;color:#fff;line-height:1.2;margin-bottom:1rem}
+    .left-body h2 span{color:var(--orange)}
+    .left-body p{font-size:.9375rem;color:rgba(255,255,255,.6);line-height:1.75;margin-bottom:2rem;max-width:340px}
+
+    .feature-list{display:flex;flex-direction:column;gap:.875rem}
+    .feature-item{display:flex;align-items:center;gap:.875rem;font-size:.9rem;color:rgba(255,255,255,.8)}
+    .feature-check{width:22px;height:22px;background:rgba(24,202,168,.2);border:1px solid rgba(24,202,168,.4);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.625rem;font-weight:900;color:var(--teal);flex-shrink:0}
+
+    .left-foot{position:relative;z-index:1;font-size:.8125rem;color:rgba(255,255,255,.28)}
+
+    /* ── RIGHT PANEL ── */
+    .right{flex:1;display:flex;align-items:center;justify-content:center;padding:2rem 1.5rem;overflow-y:auto}
+
+    .auth-card{width:100%;max-width:440px}
+
+    /* tabs */
+    .auth-tabs{display:flex;background:var(--gray-lt);border-radius:.875rem;padding:.25rem;margin-bottom:2rem}
+    .auth-tab{flex:1;padding:.625rem;text-align:center;font-size:.9375rem;font-weight:600;color:var(--gray);cursor:pointer;border-radius:.75rem;transition:all var(--trans);border:none;background:transparent}
+    .auth-tab.active{background:var(--white);color:var(--navy);box-shadow:0 2px 8px rgba(21,37,80,.1)}
+
+    .auth-card h3{font-size:1.5rem;font-weight:700;color:var(--navy);margin-bottom:.375rem}
+    .auth-card>p,.view>p{font-size:.9375rem;color:var(--gray);margin-bottom:1.75rem;line-height:1.6}
+
+    /* SSO */
+    .sso-btn{
+      width:100%;display:flex;align-items:center;gap:.875rem;
+      padding:.9375rem 1.25rem;border-radius:.875rem;
+      font-size:.9375rem;font-weight:600;cursor:pointer;
+      border:1.5px solid var(--gray-lt);background:var(--white);
+      color:var(--gray-dk);transition:all var(--trans);margin-bottom:.75rem;
+    }
+    .sso-btn:hover{box-shadow:0 4px 18px rgba(0,0,0,.09);transform:translateY(-1px)}
+    .sso-btn--google:hover{border-color:rgba(66,133,244,.5)}
+    .sso-btn--ms:hover{border-color:rgba(0,120,212,.5)}
+    .sso-btn--outlook:hover{border-color:rgba(0,120,212,.5)}
+    .sso-icon{width:22px;height:22px;flex-shrink:0}
+    .sso-label{flex:1;text-align:left}
+    .sso-arr{margin-left:auto;color:var(--gray);opacity:0;transition:opacity var(--trans);font-size:.875rem}
+    .sso-btn:hover .sso-arr{opacity:1}
+
+    /* divider */
+    .divider{display:flex;align-items:center;gap:.875rem;margin:1.375rem 0}
+    .divider__line{flex:1;height:1px;background:var(--gray-lt)}
+    .divider__txt{font-size:.8125rem;font-weight:500;color:var(--gray);white-space:nowrap}
+
+    /* form */
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+    .form-group{margin-bottom:1rem}
+    .form-label{display:block;font-size:.875rem;font-weight:600;color:var(--navy);margin-bottom:.4rem}
+    .form-input{width:100%;padding:.875rem 1rem;border:1.5px solid var(--gray-lt);border-radius:.75rem;font-size:.9375rem;font-family:'Roboto',sans-serif;color:var(--navy-d);background:var(--white);transition:border-color var(--trans),box-shadow var(--trans);outline:none}
+    .form-input:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(24,202,168,.12)}
+    .form-input::placeholder{color:#c5c9d1}
+    .pw-wrap{position:relative}
+    .pw-wrap .form-input{padding-right:2.75rem}
+    .pw-eye{position:absolute;right:.875rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--gray);font-size:.875rem;padding:.25rem;line-height:1}
+    .forgot{display:block;text-align:right;font-size:.8125rem;font-weight:600;color:var(--teal);text-decoration:none;margin-top:.375rem;transition:color var(--trans)}
+    .forgot:hover{color:var(--navy)}
+
+    /* strength */
+    .strength-bar{display:flex;gap:3px;margin-top:.4rem}
+    .seg{flex:1;height:3px;border-radius:2px;background:var(--gray-lt);transition:background var(--trans)}
+    .seg.s1{background:#ef4444}.seg.s2{background:var(--orange)}.seg.s3{background:var(--amber)}.seg.s4{background:var(--teal)}
+    .strength-lbl{font-size:.75rem;color:var(--gray);margin-top:.25rem;min-height:1rem}
+
+    .terms{font-size:.8125rem;color:var(--gray);line-height:1.65;margin-bottom:1.25rem}
+    .terms a{color:var(--teal);font-weight:600;text-decoration:none}
+    .terms a:hover{color:var(--navy)}
+
+    .btn-submit{width:100%;padding:.9375rem;background:var(--orange);color:#fff;border:none;border-radius:.875rem;font-size:1rem;font-weight:700;cursor:pointer;transition:all var(--trans);display:flex;align-items:center;justify-content:center;gap:.5rem}
+    .btn-submit:hover{background:var(--orange-h);transform:translateY(-2px);box-shadow:0 6px 24px rgba(255,69,26,.3)}
+
+    .switch{text-align:center;margin-top:1.5rem;font-size:.875rem;color:var(--gray)}
+    .switch a{color:var(--teal);font-weight:700;text-decoration:none;cursor:pointer}
+    .switch a:hover{color:var(--navy)}
+
+    /* alert */
+    .alert{padding:.875rem 1rem;border-radius:.75rem;font-size:.875rem;font-weight:500;margin-bottom:1.25rem;display:none;align-items:center;gap:.625rem}
+    .alert.show{display:flex}
+    .alert--err{background:rgba(255,69,26,.07);color:var(--orange);border:1px solid rgba(255,69,26,.2)}
+    .alert--ok{background:rgba(24,202,168,.1);color:#0e9b7e;border:1px solid rgba(24,202,168,.3)}
+
+    /* loading */
+    .spin{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* responsive */
+    @media(max-width:860px){
+      .left{display:none}
+      .right{background:var(--white);padding:2rem 1.25rem}
+    }
+  </style>
+</head>
+<body>
+
+<!-- LEFT -->
+<div class="left">
+  <a href="index.html" class="left-logo">
+    <div class="left-logo-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+    </div>
+    <span class="left-logo-name">Contribute<em>AI</em></span>
+  </a>
+
+  <div class="left-body">
+    <div class="left-badge">Google CCAI · Vertex AI · Dialogflow CX</div>
+    <h2>AI Agents That <span>Run Your Call Center</span> Automatically</h2>
+    <p>Join businesses using ContributeAI to automate calls, book appointments, and cut costs by 60% with AI virtual agents.</p>
+    <div class="feature-list">
+      <div class="feature-item"><span class="feature-check">✓</span>Google CCAI CX virtual agents — 24/7</div>
+      <div class="feature-item"><span class="feature-check">✓</span>Gmail &amp; Outlook calendar auto-booking</div>
+      <div class="feature-item"><span class="feature-check">✓</span>QR code generation, scanning &amp; reader</div>
+      <div class="feature-item"><span class="feature-check">✓</span>Real-time CCAI Insights dashboard</div>
+      <div class="feature-item"><span class="feature-check">✓</span>Zero hold time — callers answered instantly</div>
+    </div>
+  </div>
+
+  <div class="left-foot">© 2025 ContributeAI. All rights reserved.</div>
+</div>
+
+<!-- RIGHT -->
+<div class="right">
+  <div class="auth-card">
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tabUp" onclick="switchTab('up')">Create Account</button>
+      <button class="auth-tab" id="tabIn" onclick="switchTab('in')">Sign In</button>
+    </div>
+
+    <div id="alertBox" class="alert"></div>
+
+    <!-- ── SIGN UP VIEW ── -->
+    <div id="viewUp">
+      <h3>Get started free</h3>
+      <p>Connect with your work account for instant access.</p>
+
+      <button class="sso-btn sso-btn--google" onclick="googleSSO('up')">
+        <svg class="sso-icon" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+        <span class="sso-label">Continue with Google</span>
+        <span class="sso-arr">→</span>
+      </button>
+
+      <button class="sso-btn sso-btn--ms" onclick="microsoftSSO('up')">
+        <svg class="sso-icon" viewBox="0 0 23 23"><rect x="1" y="1" width="10" height="10" fill="#F25022"/><rect x="12" y="1" width="10" height="10" fill="#7FBA00"/><rect x="1" y="12" width="10" height="10" fill="#00A4EF"/><rect x="12" y="12" width="10" height="10" fill="#FFB900"/></svg>
+        <span class="sso-label">Continue with Microsoft</span>
+        <span class="sso-arr">→</span>
+      </button>
+
+      <button class="sso-btn sso-btn--outlook" onclick="microsoftSSO('up')">
+        <svg class="sso-icon" viewBox="0 0 24 24"><path d="M7.88 12.04q0 .45-.11.87-.1.41-.33.74-.22.33-.58.52-.37.2-.87.2t-.85-.2q-.35-.21-.57-.55-.22-.33-.33-.75-.1-.42-.1-.86t.1-.87q.1-.43.34-.76.22-.34.59-.54.36-.2.87-.2t.86.2q.35.21.57.55.22.34.31.77.1.43.1.88zM24 12v9.38q0 .46-.33.8-.33.32-.8.32H7.13q-.46 0-.8-.33-.32-.33-.32-.8V18H1q-.41 0-.7-.3-.3-.29-.3-.7V7q0-.41.3-.7Q.58 6 1 6h6.5V2.55q0-.44.3-.75.3-.3.75-.3h12.9q.44 0 .75.3.3.3.3.75V10.85l1.24.72q.07.04.11.1.04.06.04.13v.2zm-6-8.25v3h3zm-3 8.5l3-1.75V12H15V8H8.5v1H7q-.41 0-.7.3-.3.29-.3.7v6q0 .41.3.7.29.3.7.3h.5v.7H1V7.46l12-1.86v12.8z" fill="#0078D4"/></svg>
+        <span class="sso-label">Continue with Outlook</span>
+        <span class="sso-arr">→</span>
+      </button>
+
+      <div class="divider"><div class="divider__line"></div><span class="divider__txt">or sign up with email</span><div class="divider__line"></div></div>
+
+      <form onsubmit="emailSignup(event)">
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">First Name</label><input type="text" class="form-input" id="upFirst" placeholder="Jane" required /></div>
+          <div class="form-group"><label class="form-label">Last Name</label><input type="text" class="form-input" id="upLast" placeholder="Smith" required /></div>
+        </div>
+        <div class="form-group"><label class="form-label">Work Email</label><input type="email" class="form-input" id="upEmail" placeholder="jane@company.com" required /></div>
+        <div class="form-group"><label class="form-label">Company</label><input type="text" class="form-input" id="upCompany" placeholder="Your company name" required /></div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <div class="pw-wrap">
+            <input type="password" class="form-input" id="upPw" placeholder="Min. 8 characters" required oninput="checkStrength(this.value)" />
+            <button type="button" class="pw-eye" onclick="togglePw('upPw',this)">👁</button>
+          </div>
+          <div class="strength-bar"><div class="seg" id="s1"></div><div class="seg" id="s2"></div><div class="seg" id="s3"></div><div class="seg" id="s4"></div></div>
+          <div class="strength-lbl" id="strengthLbl"></div>
+        </div>
+        <p class="terms">By creating an account you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</p>
+        <button type="submit" class="btn-submit">Create Free Account →</button>
+      </form>
+
+      <div class="switch">Already have an account? <a onclick="switchTab('in')">Sign in</a></div>
+    </div>
+
+    <!-- ── SIGN IN VIEW ── -->
+    <div id="viewIn" style="display:none">
+      <h3>Welcome back</h3>
+      <p>Sign in to your ContributeAI dashboard.</p>
+
+      <button class="sso-btn sso-btn--google" onclick="googleSSO('in')">
+        <svg class="sso-icon" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+        <span class="sso-label">Sign in with Google</span>
+        <span class="sso-arr">→</span>
+      </button>
+
+      <button class="sso-btn sso-btn--ms" onclick="microsoftSSO('in')">
+        <svg class="sso-icon" viewBox="0 0 23 23"><rect x="1" y="1" width="10" height="10" fill="#F25022"/><rect x="12" y="1" width="10" height="10" fill="#7FBA00"/><rect x="1" y="12" width="10" height="10" fill="#00A4EF"/><rect x="12" y="12" width="10" height="10" fill="#FFB900"/></svg>
+        <span class="sso-label">Sign in with Microsoft</span>
+        <span class="sso-arr">→</span>
+      </button>
+
+      <button class="sso-btn sso-btn--outlook" onclick="microsoftSSO('in')">
+        <svg class="sso-icon" viewBox="0 0 24 24"><path d="M7.88 12.04q0 .45-.11.87-.1.41-.33.74-.22.33-.58.52-.37.2-.87.2t-.85-.2q-.35-.21-.57-.55-.22-.33-.33-.75-.1-.42-.1-.86t.1-.87q.1-.43.34-.76.22-.34.59-.54.36-.2.87-.2t.86.2q.35.21.57.55.22.34.31.77.1.43.1.88zM24 12v9.38q0 .46-.33.8-.33.32-.8.32H7.13q-.46 0-.8-.33-.32-.33-.32-.8V18H1q-.41 0-.7-.3-.3-.29-.3-.7V7q0-.41.3-.7Q.58 6 1 6h6.5V2.55q0-.44.3-.75.3-.3.75-.3h12.9q.44 0 .75.3.3.3.3.75V10.85l1.24.72q.07.04.11.1.04.06.04.13v.2zm-6-8.25v3h3zm-3 8.5l3-1.75V12H15V8H8.5v1H7q-.41 0-.7.3-.3.29-.3.7v6q0 .41.3.7.29.3.7.3h.5v.7H1V7.46l12-1.86v12.8z" fill="#0078D4"/></svg>
+        <span class="sso-label">Sign in with Outlook</span>
+        <span class="sso-arr">→</span>
+      </button>
+
+      <div class="divider"><div class="divider__line"></div><span class="divider__txt">or sign in with email</span><div class="divider__line"></div></div>
+
+      <form onsubmit="emailSignin(event)">
+        <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="inEmail" placeholder="jane@company.com" required /></div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <div class="pw-wrap">
+            <input type="password" class="form-input" id="inPw" placeholder="Your password" required />
+            <button type="button" class="pw-eye" onclick="togglePw('inPw',this)">👁</button>
+          </div>
+          <a class="forgot" href="#">Forgot password?</a>
+        </div>
+        <button type="submit" class="btn-submit">Sign In →</button>
+      </form>
+
+      <div class="switch">Don't have an account? <a onclick="switchTab('up')">Sign up free</a></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // ── CONFIG — replace with real credentials ──────────────────────────────────
+  const GOOGLE_CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com';
+  const MS_CLIENT_ID     = 'YOUR_AZURE_APP_CLIENT_ID';
+  const MS_TENANT        = 'common';
+
+  const GOOGLE_CONFIGURED = !GOOGLE_CLIENT_ID.includes('YOUR_');
+  const MS_CONFIGURED     = !MS_CLIENT_ID.includes('YOUR_');
+
+  // Load SDKs only when real credentials exist
+  if (GOOGLE_CONFIGURED) {
+    const s = document.createElement('script');
+    s.src = 'https://accounts.google.com/gsi/client';
+    s.async = true;
+    document.head.appendChild(s);
+  }
+
+  // MSAL
+  let msalApp = null;
+  if (MS_CONFIGURED) {
+    const s = document.createElement('script');
+    s.src = 'https://alcdn.msauth.net/browser/2.38.3/js/msal-browser.min.js';
+    s.onload = () => {
+      try {
+        msalApp = new msal.PublicClientApplication({
+          auth:{ clientId:MS_CLIENT_ID, authority:`https://login.microsoftonline.com/${MS_TENANT}`, redirectUri:window.location.origin+'/user-dashboard.html' },
+          cache:{ cacheLocation:'localStorage' }
+        });
+      } catch(e){}
+    };
+    document.head.appendChild(s);
+  }
+
+  // ── AUTO-REDIRECT ───────────────────────────────────────────────────────────
+  window.addEventListener('load', () => {
+    if (localStorage.getItem('cai_user')) window.location.href = 'user-dashboard.html';
+  });
+
+  // ── TABS ────────────────────────────────────────────────────────────────────
+  function switchTab(t) {
+    document.getElementById('viewUp').style.display  = t==='up'?'':'none';
+    document.getElementById('viewIn').style.display  = t==='in'?'':'none';
+    document.getElementById('tabUp').classList.toggle('active', t==='up');
+    document.getElementById('tabIn').classList.toggle('active', t==='in');
+    hideAlert();
+  }
+
+  // ── GOOGLE SSO ───────────────────────────────────────────────────────────────
+  function googleSSO(mode) {
+    if (!GOOGLE_CONFIGURED || typeof google === 'undefined') {
+      // No credentials configured — use demo mode
+      saveUser({ provider:'google', name:'Demo User', email:'demo@gmail.com', company:'Demo Co' }, mode);
+      return;
+    }
+    google.accounts.oauth2.initCodeClient({
+      client_id: GOOGLE_CLIENT_ID,
+      scope:'openid email profile',
+      ux_mode:'popup',
+      callback:(r)=>{
+        if(r.error){ showAlert('err','Google sign-in failed.'); return; }
+        saveUser({ provider:'google', name:'Google User', email:'' }, mode);
+      }
+    }).requestCode();
+  }
+
+  // ── MICROSOFT / OUTLOOK SSO ─────────────────────────────────────────────────
+  async function microsoftSSO(mode) {
+    if (!MS_CONFIGURED || !msalApp) {
+      saveUser({ provider:'microsoft', name:'Microsoft User', email:'user@company.com', company:'Microsoft 365' }, mode);
+      return;
+    }
+    try {
+      const r = await msalApp.loginPopup({ scopes:['openid','profile','email','User.Read'], prompt:'select_account' });
+      saveUser({ provider:'microsoft', name:r.account.name, email:r.account.username, company:'' }, mode);
+    } catch(e) { if(!e.message?.includes('user_cancelled')) showAlert('err','Microsoft sign-in failed.'); }
+  }
+
+  // ── EMAIL FORMS ──────────────────────────────────────────────────────────────
+  function emailSignup(e) {
+    e.preventDefault();
+    const pw = document.getElementById('upPw').value;
+    if (pw.length < 8) { showAlert('err','Password must be at least 8 characters.'); return; }
+    saveUser({
+      provider:'email',
+      name: document.getElementById('upFirst').value.trim()+' '+document.getElementById('upLast').value.trim(),
+      email: document.getElementById('upEmail').value.trim(),
+      company: document.getElementById('upCompany').value.trim()
+    }, 'up');
+  }
+
+  function emailSignin(e) {
+    e.preventDefault();
+    saveUser({ provider:'email', name:'User', email:document.getElementById('inEmail').value.trim() }, 'in');
+  }
+
+  // ── SAVE & REDIRECT ─────────────────────────────────────────────────────────
+  function saveUser(user, mode) {
+    localStorage.setItem('cai_user', JSON.stringify(user));
+    showAlert('ok', `${mode==='up'?'Account created':'Signed in'} successfully! Redirecting…`);
+    setTimeout(()=>{ window.location.href='user-dashboard.html'; }, 1000);
+  }
+
+  // ── PASSWORD ─────────────────────────────────────────────────────────────────
+  function togglePw(id, btn) {
+    const el = document.getElementById(id);
+    el.type = el.type==='password'?'text':'password';
+    btn.textContent = el.type==='password'?'👁':'🙈';
+  }
+
+  function checkStrength(pw) {
+    let score = 0;
+    if(pw.length>=8) score++;
+    if(/[A-Z]/.test(pw)) score++;
+    if(/[0-9]/.test(pw)) score++;
+    if(/[^A-Za-z0-9]/.test(pw)) score++;
+    const cls=['','s1','s2','s3','s4'];
+    const lbl=['','Weak','Fair','Good','Strong'];
+    [1,2,3,4].forEach(i=>{ const s=document.getElementById('s'+i); s.className='seg'; if(i<=score) s.classList.add(cls[score]); });
+    document.getElementById('strengthLbl').textContent = pw?lbl[score]:'';
+  }
+
+  // ── ALERTS ───────────────────────────────────────────────────────────────────
+  function showAlert(type, msg) {
+    const el = document.getElementById('alertBox');
+    el.className = `alert alert--${type} show`;
+    el.textContent = (type==='err'?'⚠ ':' ✓ ') + msg;
+  }
+  function hideAlert() { document.getElementById('alertBox').className='alert'; }
+</script>
+</body>
+</html>
